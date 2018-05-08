@@ -1,6 +1,6 @@
 function Player(game, frame){
 	//call to Phaser.Sprite // new Sprite(game, x, y, key, frame)
-	Phaser.Sprite.call(this, game, 64,game.world.height-80,frame);
+	Phaser.Sprite.call(this, game, 64,game.world.height-60,frame);
 
 	// add properties
 	this.anchor.set(0.5);
@@ -9,7 +9,7 @@ function Player(game, frame){
 	this.body.collideWorldBounds = true;
 	this.body.bounce.y = 0.2;
     this.body.gravity.y = 800;
-    this.animations.add('walk',[0,1,2,3,4,5],10, true);
+    this.animations.add('walk',[0, 1, 2 ,3, 4, 5, 6 ],10, true);
 	this.animations.add('idle', ['walk1'], 30, false);
 	this.body.velocity.x = 0;
 }
@@ -24,12 +24,13 @@ Player.prototype.update = function(){
 		this.body.velocity.x = 100;
 		this.scale.x = 1;
 		this.animations.play('walk');	
-		//else the idle animation plays
+		//else player runs to the left
 		}else if(this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
 		this.body.velocity.x = -100;
 		this.scale.x = -1;
-		this.animations.play('walk');	
-		}else{
+		this.animations.play('walk');
+        //else idle plays
+        }else{
 			this.animations.play('idle');
 	}	
 }
