@@ -12,6 +12,8 @@ var MainMenu = function(game) {};
 var player;
 var platforms;
 var helpText;
+var greenGhost;
+var healthBar;
 
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
@@ -42,7 +44,9 @@ GamePlay.prototype = {
 		console.log("Gameplay: preload");
 		game.load.image('greyBackground', 'assets/img/greyBackground.png');
 		game.load.image('greyPlatform', 'assets/img/greyPlatform.png');
+		game.load.atlas('greenGhost', 'assets/img/greenGhost.png', 'assets/img/greenGhost.json');
 		game.load.atlas('player', 'assets/img/player.png', 'assets/img/player.json');
+		game.load.atlas('colorbar', 'assets/img/colorbar.png', 'assets/img/colorbar.json');
 	},
 	//creates the assets
 	create: function(){
@@ -57,21 +61,32 @@ GamePlay.prototype = {
 		 //  enables body for that group
          platforms.enableBody = true;
     	 // creates the ground
-    	 var greyPlatform = platforms.create(0, game.world.height - 90 , 'greyPlatform');
+    	 var greyPlatform = platforms.create(-60, game.world.height - 90 , 'greyPlatform');
     	 //  scales the ground so it can fit the game width
    		 // The ground doesnt fall or move when jumped on
    		 greyPlatform.body.setSize(20000, 80, 80, 80);
    		 greyPlatform.body.immovable = true;
    		 //helptext
-   		 helpText = game.add.text(6, 6, 'Press Q to Leave', { fontSize: '16px', fill: '#EEE8AA' });
+   		 helpText = game.add.text(50, 50, 'Press Q to Leave', { fontSize: '16px', fill: '#EEE8AA' });
+   		 //adds Health Bar
+	     healthBar = game.add.sprite(9,9, 'colorbar')
+	     game.physics.arcade.enable(healthBar);
+	     healthBar.enableBody = true;
+	     healthBar.body.collideWorldBounds = true;
    		 //adds player
    		 this.player = new Player(game,'player');
    		 this.game.add.existing(this.player);
    		 //camera follows player
    		 game.camera.follow(this.player, null, 0.1, 0.1);
+		 //adds green ghost
+   		 this.greenGhost = new Enemy(game,'greenGhost', 700);
+   		 this.game.add.existing(this.greenGhost);
 	},
 	update: function (){
+		//sets health bar velocity to 0
+		healthBar.body.velocity.x = 0;
 		var hitPlatform = game.physics.arcade.collide(this.player, platforms);
+		var hitPlatformEnemy = game.physics.arcade.collide(this.Enemy, platforms);
 		//console.log("Gameplay: update");
 		//console.log(hitPlatform);
 		//console.log(this.player.body.touching.down);
@@ -84,7 +99,17 @@ GamePlay.prototype = {
 			//makes player go up
             this.player.body.velocity.y = -300;
     	}
-	}
+    	//green ghost follows player
+    	if(this.player.x > this.greenGhost.x){
+    				this.greenGhost.body.velocity.x = 80;
+    				   	this.greenGhost.scale.x = 1;
+						this.greenGhost.play('walk');
+    	}else if (this.player.x < this.greenGhost.x){
+    					this.greenGhost.body.velocity.x = -80;
+    					this.greenGhost.scale.x = -1;
+						this.greenGhost.play('walk');
+    	} 
+	    }
 }
 
 //Defines gameover function
