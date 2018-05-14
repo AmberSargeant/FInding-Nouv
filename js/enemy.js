@@ -1,6 +1,6 @@
 function Enemy(game, frame, position){
 	//call to Phaser.Sprite // new Sprite(game, x, y, key, frame)
-	Phaser.Sprite.call(this, game, 64,game.world.height-70,frame);
+	Phaser.Sprite.call(this, game, 64,game.world.height-80,frame);
 
 	// add properties
 	this.anchor.set(0.5);
@@ -12,6 +12,7 @@ function Enemy(game, frame, position){
     this.body.gravity.y = 800;
     this.animations.add('walk',[0, 1, 2 ,3],4, true);
 	this.body.velocity.x = 0;
+	
 }
 
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);

@@ -18,17 +18,24 @@ Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function(){
+	console.log(this.body.velocity.x);
 	this.body.velocity.x = 0;
 	//if right key is pressed, player runs to the right
 	if(this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
 		this.body.velocity.x = 100;
 		this.scale.x = 1;
-		this.animations.play('walk');	
+		this.animations.play('walk');
+		if(attacked){
+			this.body.velocity.x = 20;
+		}
 		//else player runs to the left
 		}else if(this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
 		this.body.velocity.x = -100;
 		this.scale.x = -1;
 		this.animations.play('walk');
+		if(attacked){
+			this.body.velocity.x = -20;
+		}
         //else idle plays
         }else{
 			this.animations.play('idle');
