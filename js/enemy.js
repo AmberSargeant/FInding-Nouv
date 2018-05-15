@@ -19,4 +19,14 @@ Enemy.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.update = function(){
+  	//green ghost follows player
+    	if(player.x > this.x){
+    				this.body.velocity.x = 80;
+    				   	this.scale.x = 1;
+						this.play('walk');
+    	}else if (player.x < this.x){
+    					this.body.velocity.x = -80;
+    					this.scale.x = -1;
+						this.play('walk');
+    	} 
 	}

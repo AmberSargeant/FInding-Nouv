@@ -9,7 +9,7 @@ function Player(game, frame){
 	this.body.collideWorldBounds = true;
 	this.body.bounce.y = 0.2;
     this.body.gravity.y = 800;
-    this.animations.add('walk',[0, 1, 2 ,3, 4, 5, 6 ],10, true);
+    this.animations.add('walk',[0, 1, 2 ,3, 4, 5],10, true);
 	this.animations.add('idle', ['walk1'], 30, false);
 	this.body.velocity.x = 0;
 }

@@ -21,6 +21,7 @@ var ver1;
 var jump;
 var wall;
 var walk;
+var hitObstacleEnemy;
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
 	//loads the mainmenu images
@@ -101,10 +102,10 @@ GamePlay.prototype = {
    	     var obstacle1 = obstacles.create(500, game.world.height - 100, 'obstacle1');
    		 //makes obstacle immovable
    		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(2000, game.world.height - 70, 'obstacle1');
+   		 var obstacle1 = obstacles.create(2000, game.world.height - 60, 'obstacle1');
    		 //makes obstacle immovable
    		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(2100, game.world.height - 90, 'obstacle1');
+   		 var obstacle1 = obstacles.create(2100, game.world.height - 80, 'obstacle1');
    		 //makes obstacle immovable
    		 obstacle1.body.immovable = true;
    		  //makes obstacles
@@ -114,10 +115,10 @@ GamePlay.prototype = {
    		 var obstacle1 = obstacles.create(4100, game.world.height - 70, 'obstacle1');
    		 //makes obstacle immovable
    		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(8000, game.world.height - 70, 'obstacle1');
+   		 var obstacle1 = obstacles.create(8000, game.world.height - 60, 'obstacle1');
    		 //makes obstacle immovable
    		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(8100, game.world.height - 90, 'obstacle1');
+   		 var obstacle1 = obstacles.create(8100, game.world.height - 80, 'obstacle1');
    		 //makes obstacle immovable
    		 obstacle1.body.immovable = true;
    		
@@ -135,26 +136,32 @@ GamePlay.prototype = {
 		 healthBar.animations.add('six', Phaser.Animation.generateFrameNames('bar',6, 7, ''),30, true);
 		 healthBar.animations.add('seven', Phaser.Animation.generateFrameNames('bar',7, 7,''),30, false);
    		 //adds player
-   		 this.player = new Player(game,'player');
-   		 this.game.add.existing(this.player);
+   		 player = new Player(game,'player');
+   		 game.add.existing(player);
    		 //camera follows player
-   		 game.camera.follow(this.player, null, 0.1, 0.1);
-		 //adds green ghost
-   		 this.greenGhost = new Enemy(game,'greenGhost', 700);
-   		 this.greenGhost.body.setSize(30, 145, 10);
-   		 this.game.add.existing(this.greenGhost);
+   		 game.camera.follow(player, null, 0.1, 0.1);
+		 //adds green ghost 
+		 Ghost = game.add.group();
+		 for(var i = 0; i< 5; i++){
+		 greenGhost.enableBody = true;
+   		 greenGhost = new Enemy(game,'greenGhost', game.rnd.integerInRange(300,700));
+   		 greenGhost.body.setSize(30, 145, 10);
+   		 //game.add.existing(greenGhost);
+   		}
    		 //if player is near ghost every.5 seconds health goes down.
    		 game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
 	},
 	update: function (){
 		//checks collision with platform for both enemy and player
-		var hitPlatform = game.physics.arcade.collide(this.player, platforms);
-		var hitPlatformEnemy = game.physics.arcade.collide(this.greenGhost, platforms);
+		var hitPlatform = game.physics.arcade.collide(player, platforms);
+		var hitPlatformEnemy = game.physics.arcade.collide(greenGhost, platforms);
 		//checks collision between Enemy and Player
-	    attacked = game.physics.arcade.collide(this.greenGhost, this.player);
+	    attacked = game.physics.arcade.collide(greenGhost, player);
 	    //checks obstacle collision with enemy and player
-	    var hitObstacleEnemy = game.physics.arcade.collide(this.greenGhost, obstacles);
-	    var hitObstaclePlayer = game.physics.arcade.collide(this.player, obstacles);
+	    hitObstacleEnemy = game.physics.arcade.collide(greenGhost, obstacles);
+	    //test
+	    //console.log("got here", hitObstacleEnemy);
+	    var hitObstaclePlayer = game.physics.arcade.collide(player, obstacles);
 		//console.log("Gameplay: update");
 		//console.log(hitPlatform);
 		//console.log(this.player.body.touching.down);
@@ -163,22 +170,18 @@ GamePlay.prototype = {
 			game.state.start('GameOver');
 		}
 		//if player pressed up player jump
-		if (game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.player.body.touching.down && hitPlatform || hitObstaclePlayer && game.input.keyboard.isDown(Phaser.Keyboard.UP) 
-			&& this.player.body.touching.down ||  attacked && game.input.keyboard.isDown(Phaser.Keyboard.UP) && this.player.body.touching.down){
+		if (game.input.keyboard.isDown(Phaser.Keyboard.UP) && player.body.touching.down && hitPlatform || hitObstaclePlayer && game.input.keyboard.isDown(Phaser.Keyboard.UP) 
+			&& player.body.touching.down ||  attacked && game.input.keyboard.isDown(Phaser.Keyboard.UP) && player.body.touching.down){
 			//makes player go up
-            this.player.body.velocity.y = -300;
+            player.body.velocity.y = -300;
             jump.play('', 0, 0.25, false);
     	}
-    	//green ghost follows player
-    	if(this.player.x > this.greenGhost.x){
-    				this.greenGhost.body.velocity.x = 80;
-    				   	this.greenGhost.scale.x = 1;
-						this.greenGhost.play('walk');
-    	}else if (this.player.x < this.greenGhost.x){
-    					this.greenGhost.body.velocity.x = -80;
-    					this.greenGhost.scale.x = -1;
-						this.greenGhost.play('walk');
-    	} 
+	},
+	render: function(){
+		game.debug.body(greenGhost);
+		game.debug.body(player);
+		game.debug.body(obstacles);
+
 	},
 	//if player is attacked deplete health
 	attackedCounter: function(){
