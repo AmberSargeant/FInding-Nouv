@@ -141,12 +141,12 @@ GamePlay.prototype = {
    		 //camera follows player
    		 game.camera.follow(player, null, 0.1, 0.1);
 		 //adds green ghost 
-		 Ghost = game.add.group();
+		 greenGhost = game.add.group();
 		 for(var i = 0; i< 5; i++){
 		 greenGhost.enableBody = true;
    		 greenGhost = new Enemy(game,'greenGhost', game.rnd.integerInRange(300,700));
    		 greenGhost.body.setSize(30, 145, 10);
-   		 //game.add.existing(greenGhost);
+   		 game.add.existing(greenGhost);
    		}
    		 //if player is near ghost every.5 seconds health goes down.
    		 game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);

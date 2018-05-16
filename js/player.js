@@ -1,5 +1,5 @@
 function Player(game, frame){
-	//call to Phaser.Sprite // new Sprite(game, x, y, key, frame)
+	//call to Phaser.Sprite // new Sprite(game, x, y, frame)
 	Phaser.Sprite.call(this, game, 64,game.world.height-60,frame);
 
 	// add properties
@@ -18,7 +18,7 @@ Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function(){
-	console.log(this.body.velocity.x);
+	//console.log(this.body.velocity.x);
 	this.body.velocity.x = 0;
 	//if right key is pressed, player runs to the right
 	if(this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
