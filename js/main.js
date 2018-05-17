@@ -22,6 +22,13 @@ var jump;
 var wall;
 var walk;
 var hitObstacleEnemy;
+var hitObstaclePlayer;
+var hitPlatform;
+var hitPlatformEnemy;
+var wand;
+var wandSound;
+var oneWand = false;
+var wandAttack = false;
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
 	//loads the mainmenu images
@@ -50,27 +57,30 @@ GamePlay.prototype = {
 	preload: function(){
 		console.log("Gameplay: preload");
 		game.load.image('greyBackground', 'assets/img/greyBackground.png');
+		game.load.image('greyPlatform', 'assets/img/greyPlatform.png');
 		game.load.image('obstacle1', 'assets/img/obstacle1.png');
 		game.load.image('obstacle2', 'assets/img/obstacle2.png');
 		game.load.image('obstacle3', 'assets/img/obstacle3.png');
 		game.load.atlas('greenGhost', 'assets/img/greenGhost.png', 'assets/img/greenGhost.json');
 		game.load.atlas('player', 'assets/img/player.png', 'assets/img/player.json');
 		game.load.atlas('colorbar', 'assets/img/colorbar.png', 'assets/img/colorbar.json');
+		game.load.atlas('wand', 'assets/img/wand.png', 'assets/img/wand.json');
 		game.load.audio('ver1', 'assets/audio/Finding_Nouv_ver1.mp3');
-		game.load.audio('jump', 'assets/audio/jump.mp3');
+		game.load.audio('ver2', 'assets/audio/Finding_Nouv_ver2.mp3');
 		game.load.audio('walk', 'assets/audio/walk5.mp3');
 		game.load.audio('wall', 'assets/audio/wall.mp3');
+		game.load.audio('wandSound', 'assets/audio/wand.mp3');
 	},
 	//creates the assets
 	create: function(){
 		console.log("Gameplay: Create");
 		 game.world.setBounds(0,0,20000,600);
-		 //adds audio version 1
+		 //adds all audio and sound effects
 		 ver1 = game.add.audio('ver1');
 		 ver1.play('', 0, 0.25, true);
-		 jump = game.add.audio('jump');
 		 wall = game.add.audio('wall');
 		 walk = game.add.audio('walk');
+		 wandSound = game.add.audio('wandSound');
 		 //enables physics 
 		 game.physics.startSystem(Phaser.Physics.ARCADE);
 		//adds color background(placeholder)
@@ -138,44 +148,52 @@ GamePlay.prototype = {
    		 //adds player
    		 player = new Player(game,'player');
    		 game.add.existing(player);
-   		 //camera follows player
+   		 //adds ghost to group
+   		 ghost = game.add.group();
+   		  //camera follows player
    		 game.camera.follow(player, null, 0.1, 0.1);
-		 //adds green ghost 
-		 greenGhost = game.add.group();
-		 for(var i = 0; i< 5; i++){
-		 greenGhost.enableBody = true;
-   		 greenGhost = new Enemy(game,'greenGhost', game.rnd.integerInRange(300,700));
-   		 greenGhost.body.setSize(30, 145, 10);
-   		 game.add.existing(greenGhost);
+   		 //creates several ghost
+		 for(var i = 0; i< 5; i++){	
+   		 greenGhost = new Enemy(game,'greenGhost', '', game.rnd.integerInRange(300,1000));
+   		 ghost.add(greenGhost);
+   		 
    		}
-   		 //if player is near ghost every.5 seconds health goes down.
-   		 game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
+   		//if player is near ghost every.5 seconds health goes down.
+   		game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
+
 	},
 	update: function (){
 		//checks collision with platform for both enemy and player
-		var hitPlatform = game.physics.arcade.collide(player, platforms);
-		var hitPlatformEnemy = game.physics.arcade.collide(greenGhost, platforms);
+		hitPlatform = game.physics.arcade.collide(player, platforms);
+		hitPlatformEnemy = game.physics.arcade.collide(ghost, platforms);
 		//checks collision between Enemy and Player
-	    attacked = game.physics.arcade.collide(greenGhost, player);
-	    //checks obstacle collision with enemy and player
-	    hitObstacleEnemy = game.physics.arcade.collide(greenGhost, obstacles);
-	    //test
+	    attacked = game.physics.arcade.collide(ghost, player);
+	    //checks obstacle collision with enemy and ghost
+	    hitObstacleEnemy = game.physics.arcade.collide(ghost, obstacles);
+	  	//checks obstacke collision with player
 	    //console.log("got here", hitObstacleEnemy);
-	    var hitObstaclePlayer = game.physics.arcade.collide(player, obstacles);
+	    hitObstaclePlayer = game.physics.arcade.collide(player, obstacles);
+	    //checks overlap with player and wand, and collects wand if player overlaps
+	    game.physics.arcade.overlap(player, wand, getWand, null, this);
+	    function getWand(player, wand){
+	    	wand.kill();
+	    	wandSound.play('', 0, 0.25, false);
+	    	wandAttack = true;
+	    }
 		//console.log("Gameplay: update");
 		//console.log(hitPlatform);
-		//console.log(this.player.body.touching.down);
 		//if player presses q game over
 	 	if(game.input.keyboard.isDown(Phaser.Keyboard.Q)){
 			game.state.start('GameOver');
 		}
-		//if player pressed up player jump
-		if (game.input.keyboard.isDown(Phaser.Keyboard.UP) && player.body.touching.down && hitPlatform || hitObstaclePlayer && game.input.keyboard.isDown(Phaser.Keyboard.UP) 
-			&& player.body.touching.down ||  attacked && game.input.keyboard.isDown(Phaser.Keyboard.UP) && player.body.touching.down){
-			//makes player go up
-            player.body.velocity.y = -300;
-            jump.play('', 0, 0.25, false);
-    	}
+		//if player reaches certain point, wand spawns.
+		if(player.x > 200 && player.x < 500){
+		if(!oneWand){
+		this.makewand();
+		wand.play('wand');
+	}
+}
+	//debug
 	},
 	render: function(){
 		game.debug.body(greenGhost);
@@ -214,6 +232,24 @@ GamePlay.prototype = {
 				
 			}
 	},
+	//to prevent multiple wands being spammed
+	makewand: function(){
+	if(!oneWand){
+		wand = game.add.sprite(200,0, 'wand');
+		wand.scale.setTo(.5,.5);	
+		//enables physics on player
+		game.physics.arcade.enable(wand);
+		//defines how much gravity and bounce player has.
+		wand.body.bounce.y = 0.2;
+        wand.body.gravity.y = 800;
+        //enables player to collide against world
+        wand.body.collideWorldBounds = true;
+		//gives the player animations
+		wand.animations.add('wand',[0, 1, 2],10, true);
+		
+	}
+	oneWand = true;
+	},
 }
 
 //Defines gameover function
@@ -236,6 +272,8 @@ GameOver.prototype = {
 		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
 			game.state.start('MainMenu');
 			counter = 0;
+			oneWand = false;
+			wandAttack = false;
 		}
 
 	}
