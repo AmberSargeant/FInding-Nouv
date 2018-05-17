@@ -61,11 +61,17 @@ GamePlay.prototype = {
 		game.load.image('obstacle1', 'assets/img/obstacle1.png');
 		game.load.image('obstacle2', 'assets/img/obstacle2.png');
 		game.load.image('obstacle3', 'assets/img/obstacle3.png');
+        game.load.image('obstacle4', 'assets/img/obstacle4.png');
+        game.load.image('obstacle5', 'assets/img/obstacle5.png');
+        game.load.image('obstacle6', 'assets/img/obstacle6.png');
+        game.load.image('arm', 'assets/img/arm.png');
+        game.load.image('arm2', 'assets/img/arm2.png');
 		game.load.atlas('greenGhost', 'assets/img/greenGhost.png', 'assets/img/greenGhost.json');
 		game.load.atlas('player', 'assets/img/player.png', 'assets/img/player.json');
 		game.load.atlas('colorbar', 'assets/img/colorbar.png', 'assets/img/colorbar.json');
 		game.load.atlas('wand', 'assets/img/wand.png', 'assets/img/wand.json');
 		game.load.audio('ver1', 'assets/audio/Finding_Nouv_ver1.mp3');
+		game.load.audio('jump', 'assets/audio/jump4.mp3');
 		game.load.audio('ver2', 'assets/audio/Finding_Nouv_ver2.mp3');
 		game.load.audio('walk', 'assets/audio/walk5.mp3');
 		game.load.audio('wall', 'assets/audio/wall.mp3');
@@ -98,39 +104,90 @@ GamePlay.prototype = {
    		 //adds obstacles to group
    		 obstacles = game.add.group();
    		 //enables body for that group
-   		 obstacles.enableBody = true;
-   		 //makes obstacles
-   		 var obstacle1 = obstacles.create(200, game.world.height - 50, 'obstacle1');
-   		 //makes obstacle immovable
-   		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(300, game.world.height - 70, 'obstacle1');
-   		 //makes obstacle immovable
-   		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(400, game.world.height - 90, 'obstacle1');
-   		 //makes obstacle immovable
-   		 obstacle1.body.immovable = true;
-   	     var obstacle1 = obstacles.create(500, game.world.height - 100, 'obstacle1');
-   		 //makes obstacle immovable
-   		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(2000, game.world.height - 60, 'obstacle1');
-   		 //makes obstacle immovable
-   		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(2100, game.world.height - 80, 'obstacle1');
-   		 //makes obstacle immovable
-   		 obstacle1.body.immovable = true;
-   		  //makes obstacles
-   		 var obstacle1 = obstacles.create(4000, game.world.height - 50, 'obstacle1');
-   		 //makes obstacle immovable
-   		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(4100, game.world.height - 70, 'obstacle1');
-   		 //makes obstacle immovable
-   		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(8000, game.world.height - 60, 'obstacle1');
-   		 //makes obstacle immovable
-   		 obstacle1.body.immovable = true;
-   		 var obstacle1 = obstacles.create(8100, game.world.height - 80, 'obstacle1');
-   		 //makes obstacle immovable
-   		 obstacle1.body.immovable = true;
+	 		obstacles.enableBody = true;
+    		 //makes obstacles
+    		 var obstacle1 = obstacles.create(540, game.world.height - 200, 'obstacle5');
+    		 //makes obstacle immovable -> I dont think u need to comment this more than once, will waste alot of lines w/ all obstacles
+    		 obstacle1.body.immovable = true;
+    		 var obstacle1 = obstacles.create(580, game.world.height - 300, 'obstacle5');
+            
+             obstacle1.body.immovable = true;
+             var obstacle1 = obstacles.create(600, game.world.height - 250, 'arm');
+             //makes obstacle immovable
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+             var obstacle1 = obstacles.create(520, game.world.height - 150, 'obstacle5');
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+             var obstacle1 = obstacles.create(500, game.world.height - 100, 'obstacle5');
+
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+             var obstacle1 = obstacles.create(480, game.world.height - 50, 'obstacle5');
+
+             obstacle1.body.immovable = true;
+             var obstacle1 = obstacles.create(560, game.world.height - 250, 'obstacle5');
+    		 //makes obstacle immovable
+    		 obstacle1.body.immovable = true;
+    		 var obstacle1 = obstacles.create(600, game.world.height - 350, 'obstacle5');
+    		 //makes obstacle immovable
+    		 obstacle1.body.immovable = true;
+    	     var obstacle1 = obstacles.create(600, game.world.height - 250, 'obstacle4');
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+             var obstacle1 = obstacles.create(1100, game.world.height - 400, 'obstacle4');
+    		 //makes obstacle immovable
+            var obstacle1 = obstacles.create(1600, game.world.height - 350, 'obstacle4');
+             //makes obstacle immovable
+    		 obstacle1.body.immovable = true;
+    		 var obstacle1 = obstacles.create(2000, game.world.height - 250, 'obstacle5');
+    		 //makes obstacle immovable
+    		 obstacle1.body.immovable = true;
+    		 var obstacle1 = obstacles.create(1900, game.world.height - 150, 'arm2');
+    		 //makes obstacle immovable
+    		 obstacle1.body.immovable = true;
+    		  //makes obstacles
+    		 var obstacle1 = obstacles.create(1880, game.world.height - 150, 'obstacle4');
+    		 //makes obstacle immovable
+    		 obstacle1.body.immovable = true;
+    		 var obstacle1 = obstacles.create(2050, game.world.height - 100, 'obstacle5');
+    		 //makes obstacle immovable
+    		 obstacle1.body.immovable = true;
+    		 var obstacle1 = obstacles.create(1980, game.world.height - 200, 'obstacle6');
+    		 //makes obstacle immovable
+    		 obstacle1.body.immovable = true;
+    		 var obstacle1 = obstacles.create(1860, game.world.height - 100, 'obstacle5');
+    		 //makes obstacle immovable
+    		 obstacle1.body.immovable = true;
+
+             var obstacle1 = obstacles.create(1840, game.world.height - 50, 'obstacle5');
+             //makes obstacle immovable
+             obstacle1.body.immovable = true; 
+             
+             var obstacle1 = obstacles.create(4000, game.world.height - 250, 'obstacle5');
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+             var obstacle1 = obstacles.create(3900, game.world.height - 150, 'arm2');
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+              //makes obstacles
+             var obstacle1 = obstacles.create(3880, game.world.height - 150, 'obstacle4');
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+             var obstacle1 = obstacles.create(4050, game.world.height - 100, 'obstacle5');
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+             var obstacle1 = obstacles.create(3980, game.world.height - 200, 'obstacle6');
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+             var obstacle1 = obstacles.create(3860, game.world.height - 100, 'obstacle5');
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+
+             var obstacle1 = obstacles.create(3840, game.world.height - 50, 'obstacle5');
+             //makes obstacle immovable
+             obstacle1.body.immovable = true;
+
    		
    		 //helptext
    		 helpText = game.add.text(50, 50, 'Press Q to Leave', { fontSize: '16px', fill: '#EEE8AA' });
