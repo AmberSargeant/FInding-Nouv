@@ -29,6 +29,10 @@ var wand;
 var wandSound;
 var oneWand = false;
 var wandAttack = false;
+var firstGreen = false;
+var secondGreen = false;
+var thirdGreen = false;
+var fourthGreen = false;
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
 	//loads the mainmenu images
@@ -58,9 +62,6 @@ GamePlay.prototype = {
 		console.log("Gameplay: preload");
 		game.load.image('greyBackground', 'assets/img/greyBackground.png');
 		game.load.image('greyPlatform', 'assets/img/greyPlatform.png');
-		game.load.image('obstacle1', 'assets/img/obstacle1.png');
-		game.load.image('obstacle2', 'assets/img/obstacle2.png');
-		game.load.image('obstacle3', 'assets/img/obstacle3.png');
         game.load.image('obstacle4', 'assets/img/obstacle4.png');
         game.load.image('obstacle5', 'assets/img/obstacle5.png');
         game.load.image('obstacle6', 'assets/img/obstacle6.png');
@@ -70,6 +71,8 @@ GamePlay.prototype = {
 		game.load.atlas('player', 'assets/img/player.png', 'assets/img/player.json');
 		game.load.atlas('colorbar', 'assets/img/colorbar.png', 'assets/img/colorbar.json');
 		game.load.atlas('wand', 'assets/img/wand.png', 'assets/img/wand.json');
+		game.load.atlas('envy', 'assets/img/envy.png', 'assets/img/envy.json');
+		game.load.atlas('wrath', 'assets/img/wrath.png', 'assets/img/wrath.json');
 		game.load.audio('ver1', 'assets/audio/Finding_Nouv_ver1.mp3');
 		game.load.audio('jump', 'assets/audio/jump4.mp3');
 		game.load.audio('ver2', 'assets/audio/Finding_Nouv_ver2.mp3');
@@ -87,6 +90,7 @@ GamePlay.prototype = {
 		 wall = game.add.audio('wall');
 		 walk = game.add.audio('walk');
 		 wandSound = game.add.audio('wandSound');
+		 jump = game.add.audio('jump');
 		 //enables physics 
 		 game.physics.startSystem(Phaser.Physics.ARCADE);
 		//adds color background(placeholder)
@@ -104,91 +108,59 @@ GamePlay.prototype = {
    		 //adds obstacles to group
    		 obstacles = game.add.group();
    		 //enables body for that group
-	 		obstacles.enableBody = true;
-    		 //makes obstacles
-    		 var obstacle1 = obstacles.create(540, game.world.height - 200, 'obstacle5');
-    		 //makes obstacle immovable -> I dont think u need to comment this more than once, will waste alot of lines w/ all obstacles
-    		 obstacle1.body.immovable = true;
-    		 var obstacle1 = obstacles.create(580, game.world.height - 300, 'obstacle5');
-            
-             obstacle1.body.immovable = true;
-             var obstacle1 = obstacles.create(600, game.world.height - 250, 'arm');
-             //makes obstacle immovable
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-             var obstacle1 = obstacles.create(520, game.world.height - 150, 'obstacle5');
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-             var obstacle1 = obstacles.create(500, game.world.height - 100, 'obstacle5');
-
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-             var obstacle1 = obstacles.create(480, game.world.height - 50, 'obstacle5');
-
-             obstacle1.body.immovable = true;
-             var obstacle1 = obstacles.create(560, game.world.height - 250, 'obstacle5');
-    		 //makes obstacle immovable
-    		 obstacle1.body.immovable = true;
-    		 var obstacle1 = obstacles.create(600, game.world.height - 350, 'obstacle5');
-    		 //makes obstacle immovable
-    		 obstacle1.body.immovable = true;
-    	     var obstacle1 = obstacles.create(600, game.world.height - 250, 'obstacle4');
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-             var obstacle1 = obstacles.create(1100, game.world.height - 400, 'obstacle4');
-    		 //makes obstacle immovable
-            var obstacle1 = obstacles.create(1600, game.world.height - 350, 'obstacle4');
-             //makes obstacle immovable
-    		 obstacle1.body.immovable = true;
-    		 var obstacle1 = obstacles.create(2000, game.world.height - 250, 'obstacle5');
-    		 //makes obstacle immovable
-    		 obstacle1.body.immovable = true;
-    		 var obstacle1 = obstacles.create(1900, game.world.height - 150, 'arm2');
-    		 //makes obstacle immovable
-    		 obstacle1.body.immovable = true;
-    		  //makes obstacles
-    		 var obstacle1 = obstacles.create(1880, game.world.height - 150, 'obstacle4');
-    		 //makes obstacle immovable
-    		 obstacle1.body.immovable = true;
-    		 var obstacle1 = obstacles.create(2050, game.world.height - 100, 'obstacle5');
-    		 //makes obstacle immovable
-    		 obstacle1.body.immovable = true;
-    		 var obstacle1 = obstacles.create(1980, game.world.height - 200, 'obstacle6');
-    		 //makes obstacle immovable
-    		 obstacle1.body.immovable = true;
-    		 var obstacle1 = obstacles.create(1860, game.world.height - 100, 'obstacle5');
-    		 //makes obstacle immovable
-    		 obstacle1.body.immovable = true;
-
-             var obstacle1 = obstacles.create(1840, game.world.height - 50, 'obstacle5');
-             //makes obstacle immovable
-             obstacle1.body.immovable = true; 
-             
-             var obstacle1 = obstacles.create(4000, game.world.height - 250, 'obstacle5');
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-             var obstacle1 = obstacles.create(3900, game.world.height - 150, 'arm2');
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-              //makes obstacles
-             var obstacle1 = obstacles.create(3880, game.world.height - 150, 'obstacle4');
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-             var obstacle1 = obstacles.create(4050, game.world.height - 100, 'obstacle5');
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-             var obstacle1 = obstacles.create(3980, game.world.height - 200, 'obstacle6');
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-             var obstacle1 = obstacles.create(3860, game.world.height - 100, 'obstacle5');
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-
-             var obstacle1 = obstacles.create(3840, game.world.height - 50, 'obstacle5');
-             //makes obstacle immovable
-             obstacle1.body.immovable = true;
-
-   		
+	 	 obstacles.enableBody = true;
+    	 //makes obstacles
+    	 var obstacle1 = obstacles.create(540, game.world.height - 200, 'obstacle5');
+    	 //makes obstacle immovable -> I dont think u need to comment this more than once
+    	 obstacle1.body.immovable = true;
+    	 var obstacle1 = obstacles.create(580, game.world.height - 300, 'obstacle5');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(600, game.world.height - 250, 'arm');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(520, game.world.height - 150, 'obstacle5'); 
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(500, game.world.height - 100, 'obstacle5');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(480, game.world.height - 50, 'obstacle5');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(560, game.world.height - 250, 'obstacle5');
+    	 obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(600, game.world.height - 350, 'obstacle5');
+    	 obstacle1.body.immovable = true;
+    	 var obstacle1 = obstacles.create(600, game.world.height - 250, 'obstacle4');
+		 obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(1100, game.world.height - 400, 'obstacle4');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(1600, game.world.height - 350, 'obstacle4');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(2000, game.world.height - 250, 'obstacle5');
+    	 obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(1900, game.world.height - 150, 'arm2');
+    	 obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(1880, game.world.height - 150, 'obstacle4');
+    	 obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(2050, game.world.height - 100, 'obstacle5');
+    	 obstacle1.body.immovable = true;
+    	 var obstacle1 = obstacles.create(1980, game.world.height - 200, 'obstacle6');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(1860, game.world.height - 100, 'obstacle5');
+    	 obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(1840, game.world.height - 50, 'obstacle5');
+         obstacle1.body.immovable = true;  
+         var obstacle1 = obstacles.create(4000, game.world.height - 250, 'obstacle5');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(3900, game.world.height - 150, 'arm2');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(3880, game.world.height - 150, 'obstacle4');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(4050, game.world.height - 100, 'obstacle5');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(3980, game.world.height - 200, 'obstacle6');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(3860, game.world.height - 100, 'obstacle5');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(3840, game.world.height - 50, 'obstacle5');
+         obstacle1.body.immovable = true;   
    		 //helptext
    		 helpText = game.add.text(50, 50, 'Press Q to Leave', { fontSize: '16px', fill: '#EEE8AA' });
    		 //adds Health Bar
@@ -209,12 +181,8 @@ GamePlay.prototype = {
    		 ghost = game.add.group();
    		  //camera follows player
    		 game.camera.follow(player, null, 0.1, 0.1);
-   		 //creates several ghost
-		 for(var i = 0; i< 5; i++){	
-   		 greenGhost = new Enemy(game,'greenGhost', '', game.rnd.integerInRange(300,1000));
-   		 ghost.add(greenGhost);
-   		 
-   		}
+   	
+   		
    		//if player is near ghost every.5 seconds health goes down.
    		game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
 
@@ -245,15 +213,33 @@ GamePlay.prototype = {
 		}
 		//if player reaches certain point, wand spawns.
 		if(player.x > 200 && player.x < 500){
-		if(!oneWand){
-		this.makewand();
-		wand.play('wand');
-	}
-}
+			if(!oneWand){
+			this.makewand();
+			wand.play('wand');
+			}
+		}
+		//if player reaches a certain point, spawn green ghostie
+		if(player.x > 200){
+			if(!firstGreen){
+			this.spawnGreen();
+			}
+		}if(player.x > 600){
+			if(!secondGreen){
+			this.spawnGreen();
+			}
+		}if(player.x > 2000){
+			if(!thirdGreen){
+			this.spawnGreen();
+			}
+		}if(player.x > 2600){
+			if(!fourthGreen){
+			this.spawnGreen();
+			}
+		}
 	//debug
 	},
 	render: function(){
-		game.debug.body(greenGhost);
+		
 		game.debug.body(player);
 		game.debug.body(obstacles);
 
@@ -292,13 +278,13 @@ GamePlay.prototype = {
 	//to prevent multiple wands being spammed
 	makewand: function(){
 	if(!oneWand){
-		wand = game.add.sprite(200,0, 'wand');
+		wand = game.add.sprite(500,0, 'wand');
 		wand.scale.setTo(.5,.5);	
 		//enables physics on player
 		game.physics.arcade.enable(wand);
 		//defines how much gravity and bounce player has.
-		wand.body.bounce.y = 0.2;
-        wand.body.gravity.y = 800;
+		wand.body.bounce.y = 0.1;
+        wand.body.gravity.y = 30;
         //enables player to collide against world
         wand.body.collideWorldBounds = true;
 		//gives the player animations
@@ -306,6 +292,27 @@ GamePlay.prototype = {
 		
 	}
 	oneWand = true;
+	},
+	//spawn green ghost at a fixed position
+	spawnGreen: function(){
+	 if(!firstGreen){
+	 greenGhost = new Enemy(game,'greenGhost', '', 1000);
+     ghost.add(greenGhost);
+	 firstGreen = true
+	}if(!secondGreen){
+	 greenGhost = new Enemy(game,'greenGhost', '', 1500);
+     ghost.add(greenGhost);
+	 secondGreen = true
+	}if(!thirdGreen){
+	 greenGhost = new Enemy(game,'greenGhost', '', 3000);
+     ghost.add(greenGhost);
+	 thirdGreen = true
+	}
+	if(!fourthGreen){
+	 greenGhost = new Enemy(game,'greenGhost', '', 3600);
+     ghost.add(greenGhost);
+	 fourthGreen = true
+	}
 	},
 }
 
@@ -331,6 +338,11 @@ GameOver.prototype = {
 			counter = 0;
 			oneWand = false;
 			wandAttack = false;
+			firstGreen = false;
+			secondGreen = false;
+			thirdGreen = false;
+			fourthGreen = false;
+
 		}
 
 	}
