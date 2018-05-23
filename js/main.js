@@ -17,14 +17,21 @@ var greenGhost;
 var healthBar;
 var counter = 0;
 var attacked;
+var attackedWrath;
+var attackedEnvy;
 var ver1;
+var ver2;
 var jump;
 var wall;
 var walk;
 var hitObstacleEnemy;
+var hitObstacleWrathEnemy;
+var hitObstacleEnvyEnemy;
 var hitObstaclePlayer;
 var hitPlatform;
 var hitPlatformEnemy;
+var hitPlatformWrathEnemy;
+var hitPlatformEnvyEnemy;
 var wand;
 var wandSound;
 var oneWand = false;
@@ -33,29 +40,49 @@ var firstGreen = false;
 var secondGreen = false;
 var thirdGreen = false;
 var fourthGreen = false;
+var wrath;
+var firstWrath = false;
+var secondWrath = false;
+var thirdWrath = false;
+var fourthWrath = false; 
+var envy;
+var firstEnvy = false;
+var secondEnvy = false;
+var thirdEnvy = false;
+var fourthEnvy = false;
+var ghostCollision;
+var heart;
+var startButton;
+
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
 	//loads the mainmenu images
 	preload: function(){
 		console.log('MainMenu: preload');
+		game.load.image('particle', 'assets/img/particle.png');
 	},
 	//creates all of the assets
 	create: function(){
 		console.log("MainMenu: create'")
 		//help text
-		helpText = game.add.text(330, 110, 'Click spacebar to begin!', { fontSize: '16px', fill: '#EEE8AA' });
-
+		helpText = game.add.text(330, 110, 'Click the weird particle thingy to begin', { fontSize: '16px', fill: '#EEE8AA' });
+		//adds start button
+		startButton = game.add.sprite(0, 0, 'particle');
+		startButton.inputEnabled = true;
+		startButton.events.onInputDown.add(startGame, this);
+		function startGame(){
+			game.state.start('GamePlay');
+		}
 	},
 	update: function() {
-		//console.log("MainMenu: update");
-		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			game.state.start('GamePlay')
-		}
-	}
+	
+	},
 }
-
 //Defines actual gameplay
 var GamePlay = function(game){};
+var pauseButton;
+var unpauseButton;
+var puaseText;
 //loads gameplay assets
 GamePlay.prototype = {
 	preload: function(){
@@ -73,6 +100,9 @@ GamePlay.prototype = {
 		game.load.atlas('wand', 'assets/img/wand.png', 'assets/img/wand.json');
 		game.load.atlas('envy', 'assets/img/envy.png', 'assets/img/envy.json');
 		game.load.atlas('wrath', 'assets/img/wrath.png', 'assets/img/wrath.json');
+		game.load.atlas('heart', 'assets/img/heart.png', 'assets/img/heart.json');
+		game.load.atlas('fire', 'assets/img/fire.png', 'assets/img/fire.json');
+		game.load.image('particle', 'assets/img/particle.png');
 		game.load.audio('ver1', 'assets/audio/Finding_Nouv_ver1.mp3');
 		game.load.audio('jump', 'assets/audio/jump4.mp3');
 		game.load.audio('ver2', 'assets/audio/Finding_Nouv_ver2.mp3');
@@ -86,6 +116,7 @@ GamePlay.prototype = {
 		 game.world.setBounds(0,0,20000,600);
 		 //adds all audio and sound effects
 		 ver1 = game.add.audio('ver1');
+		 ver2 = game.add.audio('ver2');
 		 ver1.play('', 0, 0.25, true);
 		 wall = game.add.audio('wall');
 		 walk = game.add.audio('walk');
@@ -162,7 +193,7 @@ GamePlay.prototype = {
          var obstacle1 = obstacles.create(3840, game.world.height - 50, 'obstacle5');
          obstacle1.body.immovable = true;   
    		 //helptext
-   		 helpText = game.add.text(50, 50, 'Press Q to Leave', { fontSize: '16px', fill: '#EEE8AA' });
+   		 helpText = game.add.text(50, 50, 'Press weird particle thingy to pause game', { fontSize: '16px', fill: '#EEE8AA' });
    		 //adds Health Bar
 	     healthBar = game.add.sprite(9,9, 'colorbar')
 		 healthBar.fixedToCamera = true;
@@ -174,28 +205,50 @@ GamePlay.prototype = {
 		 healthBar.animations.add('five', Phaser.Animation.generateFrameNames('bar',5, 5, ''),30, false);
 		 healthBar.animations.add('six', Phaser.Animation.generateFrameNames('bar',6, 7, ''),30, true);
 		 healthBar.animations.add('seven', Phaser.Animation.generateFrameNames('bar',7, 7,''),30, false);
+		 //adds wrath group
+		 wrathG = game.add.group()
    		 //adds player
    		 player = new Player(game,'player');
    		 game.add.existing(player);
-   		 //adds ghost to group
+   		 //adds greenghost to group
    		 ghost = game.add.group();
    		  //camera follows player
    		 game.camera.follow(player, null, 0.1, 0.1);
-   	
-   		
-   		//if player is near ghost every.5 seconds health goes down.
-   		game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
-
+   		 //if player is near ghost every.5 seconds health goes down.
+   		 game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
+   		 hearticles = game.add.group();
+		 //adds pause button
+		 pauseButton = game.add.sprite(700, 0, 'particle');
+		 pauseButton.inputEnabled = true;
+		 pauseButton.fixedToCamera = true;
+		 pauseButton.events.onInputDown.add(pauseGame, this);
+		function pauseGame(){
+			game.paused = true;
+			unpauseButton = game.add.sprite(player.position.x, 300 ,'fire');
+			unpauseButton.inputEnabled = true;
+			pauseText = game.add.text(player.position.x, 200, 'Click on fire to continue', { font: '30px Arial', fill: '#fff' });
+			unpauseButton.events.onInputDown.add(unpauseGame, this);
+		}	
+		function unpauseGame(){
+			game.paused = false;
+			unpauseButton.destroy();
+			pauseText.destroy();
+		}
 	},
 	update: function (){
 		//checks collision with platform for both enemy and player
 		hitPlatform = game.physics.arcade.collide(player, platforms);
 		hitPlatformEnemy = game.physics.arcade.collide(ghost, platforms);
+		hitPlatformWrathEnemy = game.physics.arcade.collide(wrathG, platforms);
 		//checks collision between Enemy and Player
 	    attacked = game.physics.arcade.collide(ghost, player);
+	    attackedWrath = game.physics.arcade.collide(wrathG, player);
 	    //checks obstacle collision with enemy and ghost
 	    hitObstacleEnemy = game.physics.arcade.collide(ghost, obstacles);
-	  	//checks obstacke collision with player
+	    hitObstacleWrathEnemy = game.physics.arcade.collide(wrathG, obstacles);
+	    //checks collision with ghost with each other
+	    ghostCollision = game.physics.arcade.collide(ghost, ghost);
+	  	//checks obstacle collision with player
 	    //console.log("got here", hitObstacleEnemy);
 	    hitObstaclePlayer = game.physics.arcade.collide(player, obstacles);
 	    //checks overlap with player and wand, and collects wand if player overlaps
@@ -205,20 +258,21 @@ GamePlay.prototype = {
 	    	wandSound.play('', 0, 0.25, false);
 	    	wandAttack = true;
 	    }
-		//console.log("Gameplay: update");
-		//console.log(hitPlatform);
-		//if player presses q game over
-	 	if(game.input.keyboard.isDown(Phaser.Keyboard.Q)){
-			game.state.start('GameOver');
+		//checks overlap with heart and enemy, Kills enemy if they overlap
+		game.physics.arcade.overlap(heart, ghost, dieGreenGhost, null, this);
+		function dieGreenGhost(hearticles, ghost){
+		ghost.kill();
+		hearticles.kill();
 		}
+		//console.log(hitPlatform);
 		//if player reaches certain point, wand spawns.
-		if(player.x > 200 && player.x < 500){
+		if(player.x > 5300 && player.x < 5500){
 			if(!oneWand){
 			this.makewand();
 			wand.play('wand');
 			}
 		}
-		//if player reaches a certain point, spawn green ghostie
+		//if player reaches a certain point, spawns enemy
 		if(player.x > 200){
 			if(!firstGreen){
 			this.spawnGreen();
@@ -235,50 +289,54 @@ GamePlay.prototype = {
 			if(!fourthGreen){
 			this.spawnGreen();
 			}
+		}if(player.x > 5000){
+			if(!firstWrath){
+			this.spawnWrath();
+			}
 		}
-	//debug
 	},
+	//debug info
 	render: function(){
-		
 		game.debug.body(player);
 		game.debug.body(obstacles);
+		game.debug.spriteInfo(player, 32, 32);
 
 	},
 	//if player is attacked deplete health
 	attackedCounter: function(){
-			if(attacked){
-				wall.play('', 0, 0.25, false);
-				counter++;
-				if(counter == 1){
-					//console.log("1 health")
-					healthBar.animations.play("one");
-				}else if(counter ==2){
-					//console.log("2 health");
-					healthBar.animations.play("two");		
-				}else if(counter ==3){
-					//console.log("3 health");
-					healthBar.animations.play("three");	
-				}else if(counter ==4){
-					//console.log("4 health");
-					healthBar.animations.play("four");	
-				}else if(counter ==5){
-					//console.log("5 health");
-					healthBar.animations.play("five");	
-				}else if(counter ==6){
-					//console.log("6 health");
-					healthBar.animations.play("six");	
-				}else if(counter ==7){
-					//console.log("7 health");
-					healthBar.animations.play("seven");	
-					game.state.start('GameOver');
-				}
-				
+	if(attacked || attackedWrath){
+			wall.play('', 0, 0.25, false);
+			counter++;
+			if(counter == 1){
+			//console.log("1 health")
+			healthBar.animations.play("one");
+			}else if(counter ==2){
+			//console.log("2 health");
+			healthBar.animations.play("two");		
+			}else if(counter ==3){
+			//console.log("3 health");
+			healthBar.animations.play("three");	
+			}else if(counter ==4){
+			//console.log("4 health");
+			healthBar.animations.play("four");	
+			}else if(counter ==5){
+			//console.log("5 health");
+			healthBar.animations.play("five");	
+			}else if(counter ==6){
+			//console.log("6 health");
+			healthBar.animations.play("six");	
+			}else if(counter ==7){
+			//console.log("7 health");
+			healthBar.animations.play("seven");	
+			game.state.start('GameOver');
 			}
+				
+	}
 	},
 	//to prevent multiple wands being spammed
 	makewand: function(){
 	if(!oneWand){
-		wand = game.add.sprite(500,0, 'wand');
+		wand = game.add.sprite(5500,0, 'wand');
 		wand.scale.setTo(.5,.5);	
 		//enables physics on player
 		game.physics.arcade.enable(wand);
@@ -314,10 +372,21 @@ GamePlay.prototype = {
 	 fourthGreen = true
 	}
 	},
+	//spawns wrath enemy
+	spawnWrath: function(){
+	 if(!firstWrath){
+	 ver2.play('', 0, 0.25, true);
+	 ver1.stop();
+	 wrath = new Wrath(game,'wrath', '', 5700);
+     wrathG.add(wrath);
+	 firstWrath = true;
+	}
+	},
 }
 
 //Defines gameover function
 var GameOver = function(game){};
+var endButton;
 GameOver.prototype = {
 	//preloads assets
 	preload: function(){
@@ -328,23 +397,35 @@ GameOver.prototype = {
 	create: function(){
 		console.log("Gameover: create");
 		//help text
-		helpText = game.add.text(320, 380, '(Press Spacebar to startover.)', { fontSize: '16px', fill: '#FF0000' });
+		helpText = game.add.text(320, 380, 'click weird particle thingy to startover', { fontSize: '16px', fill: '#FF0000' });
+		//stops all music
 		ver1.stop();
+		ver2.stop();
+		//adds end button
+		endButton = game.add.sprite(0, 0, 'particle');
+		endButton.inputEnabled = true;
+		endButton.events.onInputDown.add(endGame, this);
+		function endGame(){
+			game.state.start('GamePlay');
+		}
 	},
 	update: function(){
 		//console.log("Gameover: Update");
-		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			game.state.start('MainMenu');
-			counter = 0;
-			oneWand = false;
-			wandAttack = false;
-			firstGreen = false;
-			secondGreen = false;
-			thirdGreen = false;
-			fourthGreen = false;
-
-		}
-
+		counter = 0;
+		oneWand = false;
+		wandAttack = false;
+		firstGreen = false;
+		secondGreen = false;
+		thirdGreen = false;
+		fourthGreen = false;
+		firstWrath = false;
+		secondWrath = false;
+		thirdWrath = false;
+		fourthWrath = false;
+		firstEnvy = false;
+		secondEnvy = false;
+	 	thirdEnvy = false;
+		fourthEnvy = false;
 	}
 }
 
