@@ -1,6 +1,6 @@
 function Player(game, key){
 	//call to Phaser.Sprite // new Sprite(game, x, y, frame)
-	Phaser.Sprite.call(this, game, 4800,game.world.height-70,key);
+	Phaser.Sprite.call(this, game, 4900,game.world.height-70,key);
 
 	// add properties
 	this.anchor.set(0.5);
@@ -16,14 +16,22 @@ function Player(game, key){
 	this.body.setSize(30, 110, 60, 25);
 	this.animations.add('jumping',[7,8],10, false);
 	this.movingRight  = true;
+	this.shootButton = game.input.keyboard.addKey(Phaser.Keyboard.E);
+	this.shootButton.onDown.add(this.oneHeart, this);
 }
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function(){
-	//console.log(this.body.velocity.x);
 	this.body.velocity.x = 0;
+
+	if (game.input.keyboard.isDown(Phaser.Keyboard.W) && this.body.touching.down && hitPlatform || hitObstaclePlayer && game.input.keyboard.isDown(Phaser.Keyboard.W) 
+			&& this.body.touching.down ||  attacked && game.input.keyboard.isDown(Phaser.Keyboard.W) && this.body.touching.down){
+			//makes player go up
+            this.body.velocity.y = -800; 
+            jump.play('', 0, 0.25, false);        
+    }
 	//if right key is pressed, player runs to the right"
 
 	if(this.game.input.keyboard.isDown(Phaser.Keyboard.D)){
@@ -37,27 +45,26 @@ Player.prototype.update = function(){
 		this.body.velocity.x = -100;
 		this.scale.x = -1;
 		this.animations.play('walk');
-		//else if Q is pressed
 	}else if(this.game.input.keyboard.isDown(Phaser.Keyboard.E)){
-        //else idle plays
-        if(wandAttack){
-        this.animations.play('wandHit');
-   		this.oneHeart();
-    	}
-    }else{
+       if(wandAttack){
+			this.animations.play('wandHit');
+		}
+    } else {
 		this.animations.play('idle');
 	}	
-		//if player pressed up player jump
-	if (game.input.keyboard.isDown(Phaser.Keyboard.W) && this.body.touching.down && hitPlatform || hitObstaclePlayer && game.input.keyboard.isDown(Phaser.Keyboard.W) 
-			&& this.body.touching.down ||  attacked && game.input.keyboard.isDown(Phaser.Keyboard.W) && this.body.touching.down){
-			//makes player go up
-            this.body.velocity.y = -300; 
-            jump.play('', 0, 0.25, false);        
+
+	if (!this.body.touching.down){
+    	this.animations.play('jumping');
     }
+		//if player pressed up player jump
+	
 
 }
 
 Player.prototype.oneHeart = function(){
-	heart = new Heart(game,'particle');
-    hearticles.add(heart);
+	if(wandAttack){
+		this.animations.play('wandHit');
+		heart = new Heart(game,'particle');
+    	hearticles.add(heart);
+	}
 }
