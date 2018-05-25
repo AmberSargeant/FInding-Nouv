@@ -54,6 +54,7 @@ var ghostCollision;
 var heart;
 var startButton;
 var wandAttackSound;
+var backButton;
 
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
@@ -76,6 +77,21 @@ MainMenu.prototype = {
 		}
 	},
 	update: function() {
+		counter = 0;
+		oneWand = false;
+		wandAttack = false;
+		firstGreen = false;
+		secondGreen = false;
+		thirdGreen = false;
+		fourthGreen = false;
+		firstWrath = false;
+		secondWrath = false;
+		thirdWrath = false;
+		fourthWrath = false;
+		firstEnvy = false;
+		secondEnvy = false;
+	 	thirdEnvy = false;
+		fourthEnvy = false;
 	
 	},
 }
@@ -117,10 +133,12 @@ GamePlay.prototype = {
 	//creates the assets
 	create: function(){
 		console.log("Gameplay: Create");
-		 game.world.setBounds(0,0,20000,600);
-		 //adds all audio and sound effects
+		 //defines music
 		 ver1 = game.add.audio('ver1');
 		 ver2 = game.add.audio('ver2');
+		//sets bounds
+		 game.world.setBounds(0,0,20000,600);
+		 //adds all audio and sound effects
 		 ver1.play('', 0, 0.25, true);
 		 wall = game.add.audio('wall');
 		 walk = game.add.audio('walk');
@@ -199,7 +217,7 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(3030, game.world.height - 300, 'obstacle5');
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(3160, game.world.height - 300, 'obstacle4');
+         var obstacle1 = obstacles.create(3120, game.world.height - 300, 'obstacle4');
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(3920, game.world.height - 200, 'obstacle4');
          obstacle1.body.immovable = true;//
@@ -223,9 +241,11 @@ GamePlay.prototype = {
     	 obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(4300, game.world.height - 50, 'obstacle5');
          obstacle1.body.immovable = true;  
-         var obstacle1 = obstacles.create(4340, game.world.height - 100, 'obstacle5');
+         var obstacle1 = obstacles.create(4380, game.world.height - 100, 'obstacle5');
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(4400, game.world.height - 150, 'arm2');
+         var obstacle1 = obstacles.create(4430, game.world.height - 60, 'obstacle5');
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(4460, game.world.height - 150, 'arm2');
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(4500, game.world.height - 150, 'obstacle4');
          obstacle1.body.immovable = true;
@@ -261,26 +281,49 @@ GamePlay.prototype = {
    		 game.camera.follow(player, null, 0.1, 0.1);
    		 //if player is near ghost every.5 seconds health goes down.
    		 game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
+   		 //makes hearticle group
    		 hearticles = game.add.group();
 		 //adds pause button
-		 pauseButton = game.add.sprite(700, 0, 'pause');
+		 pauseButton = game.add.sprite(750, 0, 'pause');
 		 pauseButton.inputEnabled = true;
 		 pauseButton.fixedToCamera = true;
 		 pauseButton.events.onInputDown.add(pauseGame, this);
+		 //functions that enable player to pause game/unpause
+		 //and to restart
 		function pauseGame(){
 			game.paused = true;
 			unpauseButton = game.add.sprite(player.position.x, 300 ,'fire');
 			unpauseButton.inputEnabled = true;
 			pauseText = game.add.text(player.position.x, 200, 'Click on fire to continue', { font: '30px Arial', fill: '#fff' });
 			unpauseButton.events.onInputDown.add(unpauseGame, this);
+			backButton = game.add.sprite(player.position.x, 100 ,'particle');
+			backButton.inputEnabled = true;
+			backText = game.add.text(player.position.x, 500, 'Click on particle to go back', { font: '30px Arial', fill: '#fff' });
+			backButton.events.onInputDown.add(restart, this);
 		}	
 		function unpauseGame(){
 			game.paused = false;
 			unpauseButton.destroy();
 			pauseText.destroy();
+			backButton.destroy();
+			backText.destroy();
+		}
+
+		function restart(){
+			game.paused = false;
+			unpauseButton.destroy();
+			pauseText.destroy();
+			backButton.destroy();
+			backText.destroy();
+			//stops all music
+			ver1.stop();
+			ver2.stop();
+			game.state.start('MainMenu');
 		}
 	},
 	update: function (){
+		//checks collision with hearts
+		game.physics.arcade.collide(hearticles, obstacles);
 		//checks collision with platform for both enemy and player
 		hitPlatform = game.physics.arcade.collide(player, platforms);
 		hitPlatformEnemy = game.physics.arcade.collide(ghost, platforms);
@@ -326,7 +369,7 @@ GamePlay.prototype = {
 			if(!secondGreen){
 			this.spawnGreen();
 			}
-		}if(player.x > 2000){
+		}if(player.x > 1000){
 			if(!thirdGreen){
 			this.spawnGreen();
 			}
@@ -350,32 +393,31 @@ GamePlay.prototype = {
 	//if player is attacked deplete health
 	attackedCounter: function(){
 	if(attacked || attackedWrath){
-			wall.play('', 0, 0.25, false);
-			counter++;
-			if(counter == 1){
-			//console.log("1 health")
-			healthBar.animations.play("one");
-			}else if(counter ==2){
-			//console.log("2 health");
-			healthBar.animations.play("two");		
-			}else if(counter ==3){
-			//console.log("3 health");
-			healthBar.animations.play("three");	
-			}else if(counter ==4){
-			//console.log("4 health");
-			healthBar.animations.play("four");	
-			}else if(counter ==5){
-			//console.log("5 health");
-			healthBar.animations.play("five");	
-			}else if(counter ==6){
-			//console.log("6 health");
-			healthBar.animations.play("six");	
-			}else if(counter ==7){
-			//console.log("7 health");
-			healthBar.animations.play("seven");	
-			game.state.start('GameOver');
-			}
-				
+		wall.play('', 0, 0.25, false);
+		counter++;
+		if(counter == 1){
+		//console.log("1 health")
+		healthBar.animations.play("one");
+		}else if(counter ==2){
+		//console.log("2 health");
+		healthBar.animations.play("two");		
+		}else if(counter ==3){
+		//console.log("3 health");
+		healthBar.animations.play("three");	
+		}else if(counter ==4){
+		//console.log("4 health");
+		healthBar.animations.play("four");	
+		}else if(counter ==5){
+		//console.log("5 health");
+		healthBar.animations.play("five");	
+		}else if(counter ==6){
+		//console.log("6 health");
+		healthBar.animations.play("six");	
+		}else if(counter ==7){
+		//console.log("7 health");
+		healthBar.animations.play("seven");	
+		game.state.start('GameOver');
+	}				
 	}
 	},
 	//to prevent multiple wands being spammed
@@ -399,33 +441,37 @@ GamePlay.prototype = {
 	//spawn green ghost at a fixed position
 	spawnGreen: function(){
 	 if(!firstGreen){
-	 greenGhost = new Enemy(game,'greenGhost', '', 1000);
-     ghost.add(greenGhost);
-	 firstGreen = true
+	 	greenGhost = new Enemy(game,'greenGhost', '', 1000);
+     	ghost.add(greenGhost);
+	 	firstGreen = true
 	}if(!secondGreen){
-	 greenGhost = new Enemy(game,'greenGhost', '', 1500);
-     ghost.add(greenGhost);
-	 secondGreen = true
+	 	greenGhost = new Enemy(game,'greenGhost', '', 1500);
+     	ghost.add(greenGhost);
+	 	secondGreen = true
 	}if(!thirdGreen){
-	 greenGhost = new Enemy(game,'greenGhost', '', 3000);
-     ghost.add(greenGhost);
-	 thirdGreen = true
+	 	greenGhost = new Enemy(game,'greenGhost', '', 2500);
+     	ghost.add(greenGhost);
+	 	thirdGreen = true
 	}
 	if(!fourthGreen){
-	 greenGhost = new Enemy(game,'greenGhost', '', 3600);
-     ghost.add(greenGhost);
-	 fourthGreen = true
+	 	greenGhost = new Enemy(game,'greenGhost', '', 3600);
+     	ghost.add(greenGhost);
+	 	fourthGreen = true
 	}
 	},
 	//spawns wrath enemy
 	spawnWrath: function(){
 	 if(!firstWrath){
-	 ver2.play('', 0, 0.25, true);
-	 ver1.stop();
-	 wrath = new Wrath(game,'wrath', '', 5700);
-     wrathG.add(wrath);
-	 firstWrath = true;
+	 	ver2.play('', 0, 0.25, true);
+	 	ver1.stop();
+	 	wrath = new Wrath(game,'wrath', '', 5700);
+     	wrathG.add(wrath);
+	 	firstWrath = true;
 	}
+	},
+	//kills them after a certain time.
+	killHearticles: function(){
+		hearticles.kill();
 	},
 }
 
