@@ -53,6 +53,7 @@ var fourthEnvy = false;
 var ghostCollision;
 var heart;
 var startButton;
+var wandAttackSound;
 
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
@@ -102,6 +103,7 @@ GamePlay.prototype = {
 		game.load.atlas('wrath', 'assets/img/wrath.png', 'assets/img/wrath.json');
 		game.load.atlas('heart', 'assets/img/heart.png', 'assets/img/heart.json');
 		game.load.atlas('fire', 'assets/img/fire.png', 'assets/img/fire.json');
+		game.load.atlas('plantObstacles', 'assets/img/plantObstacles.png', 'assets/img/plantObstacles.json');
 		game.load.image('particle', 'assets/img/particle.png');
 		game.load.audio('ver1', 'assets/audio/Finding_Nouv_ver1.mp3');
 		game.load.audio('jump', 'assets/audio/jump4.mp3');
@@ -109,6 +111,8 @@ GamePlay.prototype = {
 		game.load.audio('walk', 'assets/audio/walk5.mp3');
 		game.load.audio('wall', 'assets/audio/wall.mp3');
 		game.load.audio('wandSound', 'assets/audio/wand2.mp3');
+		game.load.audio('wandAttackSound', 'assets/audio/wandAttackSound.mp3');
+		game.load.image('pause', 'assets/img/pause.png');
 	},
 	//creates the assets
 	create: function(){
@@ -122,6 +126,7 @@ GamePlay.prototype = {
 		 walk = game.add.audio('walk');
 		 wandSound = game.add.audio('wandSound');
 		 jump = game.add.audio('jump');
+		 wandAttackSound = game.add.audio('wandAttackSound');
 		 //enables physics 
 		 game.physics.startSystem(Phaser.Physics.ARCADE);
 		//adds color background(placeholder)
@@ -159,10 +164,6 @@ GamePlay.prototype = {
          var obstacle1 = obstacles.create(600, game.world.height - 350, 'obstacle5');
     	 obstacle1.body.immovable = true;
     	 var obstacle1 = obstacles.create(600, game.world.height - 250, 'obstacle4');
-		 obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(1100, game.world.height - 400, 'obstacle4');
-         obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(1600, game.world.height - 350, 'obstacle4');
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(2000, game.world.height - 250, 'obstacle5');
     	 obstacle1.body.immovable = true;
@@ -222,7 +223,7 @@ GamePlay.prototype = {
     	 obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(4300, game.world.height - 50, 'obstacle5');
          obstacle1.body.immovable = true;  
-         var obstacle1 = obstacles.create(4340, game.world.height - 250, 'obstacle5');
+         var obstacle1 = obstacles.create(4340, game.world.height - 100, 'obstacle5');
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(4400, game.world.height - 150, 'arm2');
          obstacle1.body.immovable = true;
@@ -237,7 +238,7 @@ GamePlay.prototype = {
          var obstacle1 = obstacles.create(4840, game.world.height - 50, 'obstacle5');
          obstacle1.body.immovable = true;      
    		 //helptext
-   		 helpText = game.add.text(50, 50, 'Press weird particle thingy to pause game', { fontSize: '16px', fill: '#EEE8AA' });
+   		 helpText = game.add.text(50, 90, 'Press pause button to pause the game.', { fontSize: '16px', fill: '#EEE8AA' });
    		 //adds Health Bar
 	     healthBar = game.add.sprite(9,9, 'colorbar')
 		 healthBar.fixedToCamera = true;
@@ -262,7 +263,7 @@ GamePlay.prototype = {
    		 game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
    		 hearticles = game.add.group();
 		 //adds pause button
-		 pauseButton = game.add.sprite(700, 0, 'particle');
+		 pauseButton = game.add.sprite(700, 0, 'pause');
 		 pauseButton.inputEnabled = true;
 		 pauseButton.fixedToCamera = true;
 		 pauseButton.events.onInputDown.add(pauseGame, this);
@@ -303,9 +304,9 @@ GamePlay.prototype = {
 	    	wandAttack = true;
 	    }
 		//checks overlap with heart and enemy, Kills enemy if they overlap
-		game.physics.arcade.overlap(heart, ghost, dieGreenGhost, null, this);
-		function dieGreenGhost(hearticles, ghost){
-		ghost.kill();
+		game.physics.arcade.overlap(heart, wrathG, dieWrathGhost, null, this);
+		function dieWrathGhost(hearticles, wrathG){
+		wrathG.kill();
 		hearticles.kill();
 		}
 		//console.log(hitPlatform);

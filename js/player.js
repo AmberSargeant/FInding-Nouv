@@ -1,6 +1,6 @@
 function Player(game, key){
 	//call to Phaser.Sprite // new Sprite(game, x, y, frame)
-	Phaser.Sprite.call(this, game, 4900,game.world.height-70,key);
+	Phaser.Sprite.call(this, game, 4280,game.world.height-70,key);
 
 	// add properties
 	this.anchor.set(0.5);
@@ -29,25 +29,26 @@ Player.prototype.update = function(){
 	if (game.input.keyboard.isDown(Phaser.Keyboard.W) && this.body.touching.down && hitPlatform || hitObstaclePlayer && game.input.keyboard.isDown(Phaser.Keyboard.W) 
 			&& this.body.touching.down ||  attacked && game.input.keyboard.isDown(Phaser.Keyboard.W) && this.body.touching.down){
 			//makes player go up
-            this.body.velocity.y = -800; 
+            this.body.velocity.y = -300; 
             jump.play('', 0, 0.25, false);        
     }
 	//if right key is pressed, player runs to the right"
 
 	if(this.game.input.keyboard.isDown(Phaser.Keyboard.D)){
 		this.movingRight = true;
-		this.body.velocity.x = 100;
+		this.body.velocity.x = 105;
 		this.scale.x = 1;
 		this.animations.play('walk');
 		//else player runs to the left
 	}else if(this.game.input.keyboard.isDown(Phaser.Keyboard.A)){
 		this.movingRight = false;
-		this.body.velocity.x = -100;
+		this.body.velocity.x = -105;
 		this.scale.x = -1;
 		this.animations.play('walk');
 	}else if(this.game.input.keyboard.isDown(Phaser.Keyboard.E)){
        if(wandAttack){
 			this.animations.play('wandHit');
+			wandAttackSound.play('', 0, 0.25, false);
 		}
     } else {
 		this.animations.play('idle');
@@ -57,14 +58,13 @@ Player.prototype.update = function(){
     	this.animations.play('jumping');
     }
 		//if player pressed up player jump
-	
-
 }
 
 Player.prototype.oneHeart = function(){
 	if(wandAttack){
 		this.animations.play('wandHit');
-		heart = new Heart(game,'particle');
+		heart = new Heart(game,'heart');
     	hearticles.add(heart);
+    	wandAttackSound.play('', 0, 0.25, false);
 	}
 }
