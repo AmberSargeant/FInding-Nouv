@@ -283,6 +283,8 @@ GamePlay.prototype = {
    		 game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
    		 //makes hearticle group
    		 hearticles = game.add.group();
+   		 //makes flame group
+   		 flames = game.add.group();
 		 //adds pause button
 		 pauseButton = game.add.sprite(750, 0, 'pause');
 		 pauseButton.inputEnabled = true;

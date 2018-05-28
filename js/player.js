@@ -10,7 +10,7 @@ function Player(game, key){
 	this.body.bounce.y = 0.2;
     this.body.gravity.y = 800;
     this.body.acceleration.x = 0;
-    this.animations.add('walk',[0, 1, 2, 3, 4, 2],10, true);
+    this.animations.add('walk',[0, 1, 2, 3, 1, 2],10, true);
     this.animations.add('wandHit',[6],6, true);
 	this.animations.add('idle', ['walk2'], 30, false);
 	this.body.setSize(30, 110, 60, 25);
