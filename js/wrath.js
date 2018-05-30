@@ -15,26 +15,31 @@ function Wrath(game,key, frame, position){
     this.animations.add('walk',[0, 1, 2, 3, 4],4, true);
 	this.body.setSize(40, 120, 50, 20);
 	this.movingWrathRight  = true;
-	this.animations.add('fireMove,', [0, 1, 2], 4, true);
+	game.time.events.loop(Phaser.Timer.SECOND*3, this.oneFlame, this);
+	game.time.events.loop(Phaser.Timer.SECOND*3, this.moveWrath, this);
 }
 
 Wrath.prototype = Object.create(Phaser.Sprite.prototype);
 Wrath.prototype.constructor = Wrath;
 
 Wrath.prototype.update = function(){
-	if(this.x > 6500){
-			this.movingWrathRight = false;
-			this.body.velocity.x =  game.rnd.integerInRange(-70,-100);
-    		this.scale.x = -1;
-			this.play('walk');
-	}else if (this.x < 5800){
-			this.movingWrathRight = true;
-		    this.body.velocity.x =  game.rnd.integerInRange(70,100);
-    	    this.scale.x = 1;
-			this.play('walk');
 
-	}
-	this.animations.play('fireMove');
 }
 
-	
+Wrath.prototype.oneFlame = function(){
+	flame = new Flame(game,'fire');
+    flames.add(flame);
+}
+
+Wrath.prototype.moveWrath = function(){
+		this.body.velocity.x = game.rnd.integerInRange(-100,100);
+		if(this.body.velocity.x < 0){
+			this.movingWrathRight = false;
+    		this.scale.x = -1;
+			this.play('walk');
+	}else if (this.body.velocity.x > 0){
+			this.movingWrathRight = true;
+    	    this.scale.x = 1;
+			this.play('walk');
+	}
+}

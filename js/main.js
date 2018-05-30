@@ -56,6 +56,8 @@ var startButton;
 var wandAttackSound;
 var backButton;
 var flame;
+var walkLimit
+var secondWrath;
 
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
@@ -256,9 +258,7 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(4600, game.world.height - 100, 'obstacle5');
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(4840, game.world.height - 50, 'obstacle5');
-         obstacle1.body.immovable = true;
-
+      
          var obstacle1 = obstacles.create(5800, game.world.height - 60, 'plantObstacles', 0);
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(5900, game.world.height - 90, 'plantObstacles', 1);
@@ -290,45 +290,48 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(6600, game.world.height - 100, 'plantObstacles', 16);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(6840, game.world.height - 50, 'plantObstacles', 19);
-         obstacle1.body.immovable = true;   
+       
 
          var obstacle1 = obstacles.create(6640, game.world.height - 200, 'plantObstacles', 14);
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(6680, game.world.height - 250, 'plantObstacles', 16);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(6720, game.world.height - 300, 'plantObstacles', 17);
-         obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(6700, game.world.height - 295, 'plantObstacles', 9);
          obstacle1.body.immovable = true; 
-
-         var obstacle1 = obstacles.create(6860, game.world.height - 300, 'plantObstacles', 17);
-         obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(6980, game.world.height - 350, 'plantObstacles', 14);
-         obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(7080, game.world.height - 400, 'plantObstacles', 17);
-         obstacle1.body.immovable = true;   
-         var obstacle1 = obstacles.create(7280, game.world.height - 250, 'plantObstacles', 19);
+         var obstacle1 = obstacles.create(7348, game.world.height - 70, 'plantObstacles', 11);
          obstacle1.body.immovable = true; 
-         var obstacle1 = obstacles.create(7348, game.world.height - 100, 'plantObstacles', 14);
+         var obstacle1 = obstacles.create(7320, game.world.height - 40, 'plantObstacles', 10);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(7250, game.world.height - 90, 'plantObstacles', 7);
          obstacle1.body.immovable = true; 
 
-         var obstacle1 = obstacles.create(6960, game.world.height - 100, 'plantObstacles', 1);
+
+		 var obstacle1 = obstacles.create(6800, game.world.height - 150, 'plantObstacles', 5);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(7180, game.world.height - 150, 'plantObstacles', 2);
+         var obstacle1 = obstacles.create(6730, game.world.height - 220, 'plantObstacles', 2);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(7380, game.world.height - 200, 'plantObstacles', 3);
+         var obstacle1 = obstacles.create(6960, game.world.height - 130, 'plantObstacles', 1);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(7150, game.world.height - 140, 'plantObstacles', 2);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(7350, game.world.height - 170, 'plantObstacles', 3);
          obstacle1.body.immovable = true;   
-         var obstacle1 = obstacles.create(7580, game.world.height - 150, 'plantObstacles', 4);
-         obstacle1.body.immovable = true;    
-
-
-         var obstacle1 = obstacles.create(7840, game.world.height - 100, 'plantObstacles', 15);
+         var obstacle1 = obstacles.create(7530, game.world.height - 150, 'plantObstacles', 4);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(8030, game.world.height - 180, 'plantObstacles', 16);
-         obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(8250, game.world.height - 230, 'plantObstacles', 17);
+         var obstacle1 = obstacles.create(6880, game.world.height - 100, 'plantObstacles', 6);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(7100, game.world.height - 80, 'plantObstacles', 11);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(7470, game.world.height - 100, 'plantObstacles', 8);
+         obstacle1.body.immovable = true;             
 
+
+         var obstacle1 = obstacles.create(7840, game.world.height - 30, 'plantObstacles', 15);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(8030, game.world.height - 180, 'plantObstacles', 19);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(8250, game.world.height - 230, 'plantObstacles', 12);
+ 		 obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(8640, game.world.height - 100, 'plantObstacles', 22);
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(8840, game.world.height - 200, 'plantObstacles', 14);
@@ -512,6 +515,10 @@ GamePlay.prototype = {
 			if(!firstWrath){
 			this.spawnWrath();
 			}
+		}if(player.x > 6000){
+			if(!secondWrath){
+			this.spawnWrath();
+			}
 		}
 	},
 	//debug info
@@ -593,11 +600,15 @@ GamePlay.prototype = {
 	//spawns wrath enemy
 	spawnWrath: function(){
 	 if(!firstWrath){
-	 	ver2.play('', 0, 0.25, true);
-	 	ver1.stop();
 	 	wrath = new Wrath(game,'wrath', '', 5700);
      	wrathG.add(wrath);
 	 	firstWrath = true;
+	 	ver1.stop();
+		ver2.play();
+	}if(!secondWrath){
+	    secondWrath = new Wrath(game,'wrath', '', 7200);
+	    wrathG.add(secondWrath);
+	 	secondWrath = true;
 	}
 	},
 	//kills them after a certain time.
@@ -617,6 +628,7 @@ GameOver.prototype = {
 	},
 	//creates assets
 	create: function(){
+
 		console.log("Gameover: create");
 		//help text
 		helpText = game.add.text(320, 380, 'click weird particle thingy to startover', { fontSize: '16px', fill: '#FF0000' });
