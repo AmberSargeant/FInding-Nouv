@@ -55,6 +55,7 @@ var heart;
 var startButton;
 var wandAttackSound;
 var backButton;
+var flame;
 
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
@@ -256,7 +257,135 @@ GamePlay.prototype = {
          var obstacle1 = obstacles.create(4600, game.world.height - 100, 'obstacle5');
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(4840, game.world.height - 50, 'obstacle5');
-         obstacle1.body.immovable = true;      
+         obstacle1.body.immovable = true;
+
+         var obstacle1 = obstacles.create(5800, game.world.height - 60, 'plantObstacles', 0);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(5900, game.world.height - 90, 'plantObstacles', 1);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6000, game.world.height - 120, 'plantObstacles', 2);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6200, game.world.height - 100, 'plantObstacles', 3);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6300, game.world.height - 100, 'plantObstacles', 9);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6350, game.world.height - 130, 'plantObstacles', 7);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(5670, game.world.height - 40, 'plantObstacles', 10);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(5700, game.world.height - 80, 'plantObstacles', 6);
+         obstacle1.body.immovable = true;  
+
+         var obstacle1 = obstacles.create(6380, game.world.height - 50, 'plantObstacles', 10);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6430, game.world.height - 60, 'plantObstacles', 11);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6460, game.world.height - 80, 'plantObstacles', 12);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6500, game.world.height - 100, 'plantObstacles', 13);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6550, game.world.height - 100, 'plantObstacles', 15);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6580, game.world.height - 150, 'plantObstacles', 14);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6600, game.world.height - 100, 'plantObstacles', 16);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6840, game.world.height - 50, 'plantObstacles', 19);
+         obstacle1.body.immovable = true;   
+
+         var obstacle1 = obstacles.create(6640, game.world.height - 200, 'plantObstacles', 14);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6680, game.world.height - 250, 'plantObstacles', 16);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6720, game.world.height - 300, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6700, game.world.height - 295, 'plantObstacles', 9);
+         obstacle1.body.immovable = true; 
+
+         var obstacle1 = obstacles.create(6860, game.world.height - 300, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(6980, game.world.height - 350, 'plantObstacles', 14);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(7080, game.world.height - 400, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;   
+         var obstacle1 = obstacles.create(7280, game.world.height - 250, 'plantObstacles', 19);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(7348, game.world.height - 100, 'plantObstacles', 14);
+         obstacle1.body.immovable = true; 
+
+         var obstacle1 = obstacles.create(6960, game.world.height - 100, 'plantObstacles', 1);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(7180, game.world.height - 150, 'plantObstacles', 2);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(7380, game.world.height - 200, 'plantObstacles', 3);
+         obstacle1.body.immovable = true;   
+         var obstacle1 = obstacles.create(7580, game.world.height - 150, 'plantObstacles', 4);
+         obstacle1.body.immovable = true;    
+
+
+         var obstacle1 = obstacles.create(7840, game.world.height - 100, 'plantObstacles', 15);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(8030, game.world.height - 180, 'plantObstacles', 16);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(8250, game.world.height - 230, 'plantObstacles', 17);
+
+         var obstacle1 = obstacles.create(8640, game.world.height - 100, 'plantObstacles', 22);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(8840, game.world.height - 200, 'plantObstacles', 14);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(8960, game.world.height - 250, 'plantObstacles', 16);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(9100, game.world.height - 130, 'plantObstacles', 8);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(9360, game.world.height - 130, 'plantObstacles', 7);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(9248, game.world.height - 130, 'plantObstacles', 12);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(9100, game.world.height - 230, 'plantObstacles', 9);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(9360, game.world.height - 230, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+
+         var obstacle1 = obstacles.create(9502, game.world.height - 200, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(9580, game.world.height - 250, 'plantObstacles', 16);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(9672, game.world.height - 300, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(9780, game.world.height - 295, 'plantObstacles', 12);
+         obstacle1.body.immovable = true; 
+
+         var obstacle1 = obstacles.create(9860, game.world.height - 50, 'plantObstacles', 5);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(9980, game.world.height - 100, 'plantObstacles', 7);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(10080, game.world.height - 30, 'plantObstacles', 15);
+         obstacle1.body.immovable = true;  
+         var obstacle1 = obstacles.create(10057, game.world.height - 80, 'plantObstacles', 9);
+         obstacle1.body.immovable = true;  
+         var obstacle1 = obstacles.create(10280, game.world.height - 250, 'plantObstacles', 19);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(10348, game.world.height - 100, 'plantObstacles', 14);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(10637, game.world.height - 100, 'plantObstacles', 17);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(10667, game.world.height - 100, 'plantObstacles', 9);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(10348, game.world.height - 100, 'plantObstacles', 14);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(10667, game.world.height - 200, 'plantObstacles', 9);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(10960, game.world.height - 200, 'plantObstacles', 20);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(11800, game.world.height - 150, 'plantObstacles', 18);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(11183, game.world.height - 100, 'plantObstacles', 9);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(11380, game.world.height - 200, 'plantObstacles', 21);
+         obstacle1.body.immovable = true;   
+         var obstacle1 = obstacles.create(11580, game.world.height - 100, 'plantObstacles', 11);
+         obstacle1.body.immovable = true;         
+   		 //helptext      
    		 //helptext
    		 helpText = game.add.text(50, 90, 'Press pause button to pause the game.', { fontSize: '16px', fill: '#EEE8AA' });
    		 //adds Health Bar
