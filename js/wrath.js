@@ -14,8 +14,7 @@ function Wrath(game,key, frame, position){
     this.frame = this.animations.add('walk',[0, 1, 2 , 3 , 4],5, true);
     this.animations.add('walk',[0, 1, 2, 3, 4],4, true);
 	this.body.setSize(40, 120, 50, 20);
-	this.movingWrathRight  = true;
-	this.animations.add('fireMove,', [0, 1, 2], 4, true);
+
 }
 
 Wrath.prototype = Object.create(Phaser.Sprite.prototype);
@@ -23,18 +22,16 @@ Wrath.prototype.constructor = Wrath;
 
 Wrath.prototype.update = function(){
 	if(this.x > 6500){
-			this.movingWrathRight = false;
 			this.body.velocity.x =  game.rnd.integerInRange(-70,-100);
     		this.scale.x = -1;
 			this.play('walk');
 	}else if (this.x < 5800){
-			this.movingWrathRight = true;
 		    this.body.velocity.x =  game.rnd.integerInRange(70,100);
     	    this.scale.x = 1;
 			this.play('walk');
 
 	}
-	this.animations.play('fireMove');
+
 }
 
 	
