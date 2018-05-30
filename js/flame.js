@@ -1,6 +1,6 @@
-function Flame(game,key){
+function Heart(game,key){
 	//call to Phaser.Sprite // new Sprite(game, x, y, key, frame)
-	Phaser.Sprite.call(this, game, wrath.position.x,wrath.position.y,key);
+	Phaser.Sprite.call(this, game, player.position.x,player.position.y,key);
 
 	// add properties
 	this.anchor.set(0.5);
@@ -8,23 +8,23 @@ function Flame(game,key){
 	this.enableBody = true;
 	this.body.collideWorldBounds = true;
 	this.body.bounce.y = 0.2;
-	this.shootFlame();
+	this.shootHeart();
 }
 
-Flame.prototype = Object.create(Phaser.Sprite.prototype);
-Flame.prototype.constructor = Flame;
+Heart.prototype = Object.create(Phaser.Sprite.prototype);
+Heart.prototype.constructor = Heart;
 
-Flame.prototype.update = function(){
-	if(this.x > wrath.x +200 || this.x < wrath.x -200){
+Heart.prototype.update = function(){
+	if(this.x > player.x +200 || this.x < player.x -200){
 		this.kill();
 	}
 }
 
-Flame.prototype.shootFlame = function(){
+Heart.prototype.shootHeart = function(){
 	//if player is moving right, it goes right. Else
 	// the heart goes left.
-	if(wrath.movingWrathRight){
-		this.body.velocity.x = 300
+	if(player.movingRight){
+	this.body.velocity.x = 300
 	}else{
 		this.body.velocity.x = -300
 	}
