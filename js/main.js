@@ -21,6 +21,7 @@ var attackedWrath;
 var attackedEnvy;
 var ver1;
 var ver2;
+var ver3;
 var jump;
 var wall;
 var walk;
@@ -45,11 +46,13 @@ var firstWrath = false;
 var secondWrath = false;
 var thirdWrath = false;
 var fourthWrath = false; 
+var fifthWrath = false;
 var envy;
 var firstEnvy = false;
 var secondEnvy = false;
 var thirdEnvy = false;
 var fourthEnvy = false;
+var fifthEnvy = false;
 var ghostCollision;
 var heart;
 var startButton;
@@ -58,6 +61,10 @@ var backButton;
 var flame;
 var walkLimit
 var secondWrath;
+var dieWrath;
+var dieEnvy;
+var attackedFlame;
+var music3 = false;
 
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
@@ -65,14 +72,17 @@ MainMenu.prototype = {
 	preload: function(){
 		console.log('MainMenu: preload');
 		game.load.image('particle', 'assets/img/particle.png');
+		game.load.image('titleScreen', 'assets/img/findingnouvtitle.png');
+		game.load.atlas('buttons', 'assets/img/buttons.png', 'assets/img/buttons.json');
 	},
 	//creates all of the assets
 	create: function(){
 		console.log("MainMenu: create'")
-		//help text
-		helpText = game.add.text(330, 110, 'Click the weird particle thingy to begin', { fontSize: '16px', fill: '#EEE8AA' });
+		//ads title image
+		game.add.sprite(0, 0, 'titleScreen');
 		//adds start button
-		startButton = game.add.sprite(0, 0, 'particle');
+		startButton = game.add.sprite(0, 0, 'buttons');
+		startButton.animations.add('play',[0, 1],2, true);
 		startButton.inputEnabled = true;
 		startButton.events.onInputDown.add(startGame, this);
 		function startGame(){
@@ -80,6 +90,7 @@ MainMenu.prototype = {
 		}
 	},
 	update: function() {
+		//sets everything to 0
 		counter = 0;
 		oneWand = false;
 		wandAttack = false;
@@ -91,11 +102,19 @@ MainMenu.prototype = {
 		secondWrath = false;
 		thirdWrath = false;
 		fourthWrath = false;
+		fifthWrath = false;
 		firstEnvy = false;
 		secondEnvy = false;
 	 	thirdEnvy = false;
 		fourthEnvy = false;
-	
+		fifthEnvy = false;
+		music3 = false;
+		//plays startbutton animations
+		startButton.animations.play('play');
+	},
+	//debug info
+	render: function(){
+		game.debug.body(startButton);
 	},
 }
 //Defines actual gameplay
@@ -127,6 +146,7 @@ GamePlay.prototype = {
 		game.load.audio('ver1', 'assets/audio/Finding_Nouv_ver1.mp3');
 		game.load.audio('jump', 'assets/audio/jump4.mp3');
 		game.load.audio('ver2', 'assets/audio/Finding_Nouv_ver2.mp3');
+		game.load.audio('ver3', 'assets/audio/Finding_Nouv_ver3.mp3');
 		game.load.audio('walk', 'assets/audio/walk5.mp3');
 		game.load.audio('wall', 'assets/audio/wall.mp3');
 		game.load.audio('wandSound', 'assets/audio/wand2.mp3');
@@ -139,8 +159,9 @@ GamePlay.prototype = {
 		 //defines music
 		 ver1 = game.add.audio('ver1');
 		 ver2 = game.add.audio('ver2');
+		 ver3 = game.add.audio('ver3');
 		//sets bounds
-		 game.world.setBounds(0,0,20000,600);
+		 game.world.setBounds(0,0,18800,600);
 		 //adds all audio and sound effects
 		 ver1.play('', 0, 0.25, true);
 		 wall = game.add.audio('wall');
@@ -399,14 +420,14 @@ GamePlay.prototype = {
 		 healthBar.animations.add('four', Phaser.Animation.generateFrameNames('bar',4, 4, ''),30, false);
 		 healthBar.animations.add('five', Phaser.Animation.generateFrameNames('bar',5, 5, ''),30, false);
 		 healthBar.animations.add('six', Phaser.Animation.generateFrameNames('bar',6, 7, ''),30, true);
-		 healthBar.animations.add('seven', Phaser.Animation.generateFrameNames('bar',7, 7,''),30, false);
-		 //adds wrath group
-		 wrathG = game.add.group()
+		 healthBar.animations.add('seven', Phaser.Animation.generateFrameNames('bar',7, 7,''),30, false);	
    		 //adds player
    		 player = new Player(game,'player');
    		 game.add.existing(player);
-   		 //adds greenghost to group
+   		 //adds enemy group.
    		 ghost = game.add.group();
+   		 wrathG = game.add.group()
+   		 envyG = game.add.group();
    		  //camera follows player
    		 game.camera.follow(player, null, 0.1, 0.1);
    		 //if player is near ghost every.5 seconds health goes down.
@@ -450,6 +471,7 @@ GamePlay.prototype = {
 			//stops all music
 			ver1.stop();
 			ver2.stop();
+			ver3.stop();
 			game.state.start('MainMenu');
 		}
 	},
@@ -460,12 +482,16 @@ GamePlay.prototype = {
 		hitPlatform = game.physics.arcade.collide(player, platforms);
 		hitPlatformEnemy = game.physics.arcade.collide(ghost, platforms);
 		hitPlatformWrathEnemy = game.physics.arcade.collide(wrathG, platforms);
+		hitPlatformEnvyEnemy = game.physics.arcade.collide(envyG, platforms);
 		//checks collision between Enemy and Player
 	    attacked = game.physics.arcade.collide(ghost, player);
 	    attackedWrath = game.physics.arcade.collide(wrathG, player);
-	    //checks obstacle collision with enemy and ghost
+	    attackedEnvy = game.physics.arcade.collide(envyG, player);
+	    attackedFlame = game.physics.arcade.collide(flames, player);
+	    //checks obstacle collision with enemy and obstacles
 	    hitObstacleEnemy = game.physics.arcade.collide(ghost, obstacles);
 	    hitObstacleWrathEnemy = game.physics.arcade.collide(wrathG, obstacles);
+	    hitObstacleEnvyEnemy = game.physics.arcade.collide(envyG, obstacles);
 	    //checks collision with ghost with each other
 	    ghostCollision = game.physics.arcade.collide(ghost, ghost);
 	  	//checks obstacle collision with player
@@ -479,43 +505,68 @@ GamePlay.prototype = {
 	    	wandAttack = true;
 	    }
 		//checks overlap with heart and enemy, Kills enemy if they overlap
-		game.physics.arcade.overlap(heart, wrathG, dieWrathGhost, null, this);
+	    dieWrath = game.physics.arcade.overlap(heart, wrathG, dieWrathGhost, null, this);
+	    dieEnvy = game.physics.arcade.overlap(heart, envyG, dieEnvyGhost, null, this);
 		function dieWrathGhost(hearticles, wrathG){
-		wrathG.kill();
-		hearticles.kill();
+			wrathG.kill();
+			hearticles.kill();
+		}
+		function dieEnvyGhost(hearticles, envyG){
+			envyG.kill();
+			hearticles.kill();
 		}
 		//console.log(hitPlatform);
 		//if player reaches certain point, wand spawns.
 		if(player.x > 5300 && player.x < 5500){
 			if(!oneWand){
-			this.makewand();
-			wand.play('wand');
+				this.makewand();
+				wand.play('wand');
 			}
 		}
 		//if player reaches a certain point, spawns enemy
 		if(player.x > 200){
 			if(!firstGreen){
-			this.spawnGreen();
+				this.spawnGreen();
 			}
 		}if(player.x > 600){
 			if(!secondGreen){
-			this.spawnGreen();
+				this.spawnGreen();
 			}
 		}if(player.x > 1000){
 			if(!thirdGreen){
-			this.spawnGreen();
+				this.spawnGreen();
 			}
 		}if(player.x > 2600){
 			if(!fourthGreen){
-			this.spawnGreen();
+				this.spawnGreen();
 			}
 		}if(player.x > 5000){
-			if(!firstWrath){
-			this.spawnWrath();
+			if(!firstWrath || !firstEnvy){
+				this.spawnWrath();
+				this.spawnEnvy();
 			}
 		}if(player.x > 6000){
 			if(!secondWrath){
-			this.spawnWrath();
+				this.spawnWrath();
+			}
+		}if(player.x > 7000){
+			if(!thirdWrath){
+				this.spawnWrath();
+			}
+		}if(player.x > 8000){
+			if(!fourthWrath){
+				this.spawnWrath();
+			}
+		}if(player.x > 9000){
+			if(!fifthWrath){
+				this.spawnWrath();
+			}
+		}
+		if(player.x > 10000){
+			if(!music3){
+			ver2.stop();
+		    ver3.play('', 0, 0.25, true);
+		    music3 = true;
 			}
 		}
 	},
@@ -523,12 +574,13 @@ GamePlay.prototype = {
 	render: function(){
 		game.debug.body(player);
 		game.debug.body(obstacles);
+		//hearticles.forEach(game.debug.body,game.debug,"#dd00dd",false);
 		game.debug.spriteInfo(player, 32, 32);
 
 	},
 	//if player is attacked deplete health
 	attackedCounter: function(){
-	if(attacked || attackedWrath){
+	if(attacked || attackedWrath || attackedFlame || attackedEnvy){
 		wall.play('', 0, 0.25, false);
 		counter++;
 		if(counter == 1){
@@ -598,16 +650,35 @@ GamePlay.prototype = {
 	//spawns wrath enemy
 	spawnWrath: function(){
 	 if(!firstWrath){
-	 	wrath = new Wrath(game,'wrath', '', 5700);
+	 	wrath = new Wrath(game,'wrath', '', 6000);
      	wrathG.add(wrath);
 	 	firstWrath = true;
 	 	ver1.stop();
-		ver2.play();
+		ver2.play('', 0, 0.25, true);
 	}if(!secondWrath){
 	    secondWrath = new Wrath(game,'wrath', '', 7200);
 	    wrathG.add(secondWrath);
 	 	secondWrath = true;
+	}if(!thirdWrath){
+		thirdWrath = new Wrath(game,'wrath', '', 8200);
+	    wrathG.add(thirdWrath);
+	 	thirdWrath = true;
+	}if(!fourthWrath){
+		fourthWrath = new Wrath(game,'wrath', '', 9200);
+	    wrathG.add(fourthWrath);
+	 	fourthWrath = true;
+	}if(!fifthWrath){
+		fifthWrath = new Wrath(game,'wrath', '', 10200);
+	    wrathG.add(fifthWrath);
+	 	fifthWrath = true;
 	}
+	},
+	spawnEnvy: function(){
+	 if(!firstEnvy){
+	 	envy = new Envy(game,'envy', '', 6065, 300);
+     	envyG.add(envy);
+	 	firstEnvy = true;
+	 }
 	},
 	//kills them after a certain time.
 	killHearticles: function(){
@@ -633,6 +704,7 @@ GameOver.prototype = {
 		//stops all music
 		ver1.stop();
 		ver2.stop();
+		ver3.stop();
 		//adds end button
 		endButton = game.add.sprite(0, 0, 'particle');
 		endButton.inputEnabled = true;
@@ -654,10 +726,13 @@ GameOver.prototype = {
 		secondWrath = false;
 		thirdWrath = false;
 		fourthWrath = false;
+		fifthWrath = false;
 		firstEnvy = false;
 		secondEnvy = false;
 	 	thirdEnvy = false;
 		fourthEnvy = false;
+		fifthEnvy = false;
+		music3 = false;
 	}
 }
 
