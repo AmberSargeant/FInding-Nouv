@@ -22,6 +22,7 @@ var attackedEnvy;
 var ver1;
 var ver2;
 var ver3;
+var ver4;
 var jump;
 var wall;
 var walk;
@@ -65,6 +66,9 @@ var dieWrath;
 var dieEnvy;
 var attackedFlame;
 var music3 = false;
+var music4 = false;
+var pauseSound;
+var opening;
 
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
@@ -74,10 +78,14 @@ MainMenu.prototype = {
 		game.load.image('particle', 'assets/img/particle.png');
 		game.load.image('titleScreen', 'assets/img/findingnouvtitle.png');
 		game.load.atlas('buttons', 'assets/img/buttons.png', 'assets/img/buttons.json');
+		game.load.audio('opening', 'assets/audio/Finding_Nouv_opening.mp3');
 	},
 	//creates all of the assets
 	create: function(){
 		console.log("MainMenu: create'")
+		//defines music
+		opening = game.add.audio('opening');
+		opening.play('', 0, 0.25, true);
 		//ads title image
 		game.add.sprite(0, 0, 'titleScreen');
 		//adds start button
@@ -109,6 +117,7 @@ MainMenu.prototype = {
 		fourthEnvy = false;
 		fifthEnvy = false;
 		music3 = false;
+		music4 = false;
 		//plays startbutton animations
 		startButton.animations.play('play');
 	},
@@ -147,10 +156,12 @@ GamePlay.prototype = {
 		game.load.audio('jump', 'assets/audio/jump4.mp3');
 		game.load.audio('ver2', 'assets/audio/Finding_Nouv_ver2.mp3');
 		game.load.audio('ver3', 'assets/audio/Finding_Nouv_ver3.mp3');
+		game.load.audio('ver4', 'assets/audio/Finding_Nouv_ver4.mp3');
 		game.load.audio('walk', 'assets/audio/walk5.mp3');
 		game.load.audio('wall', 'assets/audio/wall.mp3');
 		game.load.audio('wandSound', 'assets/audio/wand2.mp3');
 		game.load.audio('wandAttackSound', 'assets/audio/wandAttackSound.mp3');
+		game.load.audio('pauseSound', 'assets/audio/pause.mp3');
 		game.load.image('pause', 'assets/img/pause.png');
 	},
 	//creates the assets
@@ -160,8 +171,12 @@ GamePlay.prototype = {
 		 ver1 = game.add.audio('ver1');
 		 ver2 = game.add.audio('ver2');
 		 ver3 = game.add.audio('ver3');
+		 ver4 = game.add.audio('ver4');
+		 pauseSound = game.add.audio('pauseSound');
 		//sets bounds
 		 game.world.setBounds(0,0,18800,600);
+		 //stops opening music
+		 opening.stop();
 		 //adds all audio and sound effects
 		 ver1.play('', 0, 0.25, true);
 		 wall = game.add.audio('wall');
@@ -472,6 +487,8 @@ GamePlay.prototype = {
 			ver1.stop();
 			ver2.stop();
 			ver3.stop();
+			ver4.stop();
+			opening.stop();
 			game.state.start('MainMenu');
 		}
 	},
@@ -546,20 +563,24 @@ GamePlay.prototype = {
 				this.spawnEnvy();
 			}
 		}if(player.x > 6000){
-			if(!secondWrath){
+			if(!secondWrath || !secondEnvy){
 				this.spawnWrath();
+				this.spawnEnvy();
 			}
 		}if(player.x > 7000){
-			if(!thirdWrath){
+			if(!thirdWrath || !thirdEnvy){
 				this.spawnWrath();
+				this.spawnEnvy();
 			}
 		}if(player.x > 8000){
-			if(!fourthWrath){
+			if(!fourthWrath || !fourthEnvy){
 				this.spawnWrath();
+				this.spawnEnvy();
 			}
 		}if(player.x > 9000){
-			if(!fifthWrath){
+			if(!fifthWrath || !fifthEnvy){
 				this.spawnWrath();
+				this.spawnEnvy();
 			}
 		}
 		if(player.x > 10000){
@@ -567,6 +588,13 @@ GamePlay.prototype = {
 			ver2.stop();
 		    ver3.play('', 0, 0.25, true);
 		    music3 = true;
+			}
+		}
+		if(player.x > 15000){
+			if(!music4){
+				ver3.stop();
+				ver4.play('', 0, 0.25, true);
+		    	music4 = true;
 			}
 		}
 	},
@@ -673,11 +701,28 @@ GamePlay.prototype = {
 	 	fifthWrath = true;
 	}
 	},
+	//spawns envy enemy
 	spawnEnvy: function(){
 	 if(!firstEnvy){
 	 	envy = new Envy(game,'envy', '', 6065, 300);
      	envyG.add(envy);
 	 	firstEnvy = true;
+	 }if(!secondEnvy){
+	 	envy = new Envy(game,'envy', '', 7400, 280);
+     	envyG.add(envy);
+	 	secondEnvy = true;
+	 }if(!thirdEnvy){
+	 	envy = new Envy(game,'envy', '', 8690, 300);
+     	envyG.add(envy);
+	 	thirdEnvy = true;
+	 }if(!fourthEnvy){
+	 	envy = new Envy(game,'envy', '', 9600, 300);
+     	envyG.add(envy);
+	 	fourthEnvy = true;
+	 }if(!fifthEnvy){
+	 	envy = new Envy(game,'envy', '', 12000, 300);
+     	envyG.add(envy);
+	 	fifthEnvy = true;
 	 }
 	},
 	//kills them after a certain time.
@@ -705,6 +750,7 @@ GameOver.prototype = {
 		ver1.stop();
 		ver2.stop();
 		ver3.stop();
+		opening.stop();
 		//adds end button
 		endButton = game.add.sprite(0, 0, 'particle');
 		endButton.inputEnabled = true;
@@ -733,6 +779,7 @@ GameOver.prototype = {
 		fourthEnvy = false;
 		fifthEnvy = false;
 		music3 = false;
+		music4 = false;
 	}
 }
 
