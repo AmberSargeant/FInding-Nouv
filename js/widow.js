@@ -10,13 +10,13 @@ function Widow(game,key, frame, position){
 	this.body.collideWorldBounds = true;
 	this.body.bounce.y = 0.2;
     this.body.gravity.y = 800;
+    this.body.immovable = true;
     this.frame = this.animations.add('walk',[0, 1,2],4, true);
     this.animations.add('walk',[0, 1, 2],4, true);
-	this.body.setSize(30, 130, 50, 20);
+	this.body.setSize(100, 130, 35, 20);
 	game.time.events.loop(Phaser.Timer.SECOND*3, this.moveWidow, this);
-	this.minX = position - 60;
-	this.maxX = position + 60 ;
-	this.body.setSize(40, 120, 48, 15);
+	this.minX = position - 300;
+	this.maxX = position + 300 ;
 }
 
 Widow.prototype = Object.create(Phaser.Sprite.prototype);
@@ -36,7 +36,7 @@ Widow.prototype.update = function(){
 }
 
 Widow.prototype.moveWidow = function(){
-	this.body.velocity.x = game.rnd.integerInRange(-30,30);
+	this.body.velocity.x = game.rnd.integerInRange(-100,100);
 	if(this.body.velocity.x < 0){
     		this.scale.x = -1;
 			this.play('walk');

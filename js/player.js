@@ -1,6 +1,6 @@
 function Player(game, key){
 	//call to Phaser.Sprite // new Sprite(game, x, y, frame)
-	Phaser.Sprite.call(this, game, 17000,game.world.height-75,key);
+	Phaser.Sprite.call(this, game, 5000,game.world.height-75,key);
 
 	// add properties
 	this.anchor.set(0.5);
@@ -38,7 +38,7 @@ Player.prototype.update = function(){
 			&& this.body.touching.down ||  attacked && game.input.keyboard.isDown(Phaser.Keyboard.W) && this.body.touching.down || attackedFear && game.input.keyboard.isDown(Phaser.Keyboard.W)
 			&& this.body.touching.down){
 			//makes player go up
-            this.body.velocity.y = -400; 
+            this.body.velocity.y = -800; 
             jump.play('', 0, 0.25, false);        
     	}
 	}
@@ -46,13 +46,13 @@ Player.prototype.update = function(){
 
 	if(this.game.input.keyboard.isDown(Phaser.Keyboard.D)){
 		this.movingRight = true;
-		this.body.velocity.x = 105;
+		this.body.velocity.x = 700;
 		this.scale.x = 1;
 		this.animations.play('walk');
 		//else player runs to the left
 	}else if(this.game.input.keyboard.isDown(Phaser.Keyboard.A)){
 		this.movingRight = false;
-		this.body.velocity.x = -105;
+		this.body.velocity.x = -700;
 		this.scale.x = -1;
 		this.animations.play('walk');
 	}else if(this.game.input.keyboard.isDown(Phaser.Keyboard.E)){

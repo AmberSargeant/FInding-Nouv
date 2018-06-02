@@ -16,10 +16,12 @@ var helpText;
 var greenGhost;
 var healthBar;
 var counter = 0;
+var widowDeathCounter = 0;
 var attacked;
 var attackedWrath;
 var attackedEnvy;
 var attackedFear;
+var attackedWidow;
 var ver1;
 var ver2;
 var ver3;
@@ -31,12 +33,14 @@ var hitObstacleEnemy;
 var hitObstacleWrathEnemy;
 var hitObstacleEnvyEnemy;
 var hitObstacleFearEnemy;
+var hitObstacleWidowEnemy;
 var hitObstaclePlayer;
 var hitPlatform;
 var hitPlatformEnemy;
 var hitPlatformWrathEnemy;
 var hitPlatformEnvyEnemy;
-var hitPlatformFearEnemy
+var hitPlatformFearEnemy;
+var hitPlatformWidowEnemy;
 var wand;
 var wandSound;
 var oneWand = false;
@@ -69,6 +73,8 @@ var fourthFear = false;
 var fifthFear = false;
 var sixthFear = false;
 var seventhFear = false;
+var widow;
+var widow = false;
 var ghostCollision;
 var heart;
 var startButton;
@@ -80,6 +86,7 @@ var secondWrath;
 var dieWrath;
 var dieEnvy;
 var dieFear;
+var dieWidow;
 var attackedFlame;
 var music3 = false;
 var music4 = false;
@@ -120,6 +127,7 @@ MainMenu.prototype = {
 	update: function() {
 		//resets all of the variables!
 		counter = 0;
+		widowDeathCounter = 0;
 		oneWand = false;
 		wandAttack = false;
 		firstGreen = false;
@@ -147,6 +155,7 @@ MainMenu.prototype = {
 		fifthFear = false;
 		sixthFear = false;
 		seventhFear = false;
+		widow = false;
 		music3 = false;
 		music4 = false;
 
@@ -483,6 +492,7 @@ GamePlay.prototype = {
    		 wrathG = game.add.group()
    		 envyG = game.add.group();
    		 fearG = game.add.group();
+   		 widowG = game.add.group();
    		 hearticles = game.add.group();
    		 flames = game.add.group();
   
@@ -541,6 +551,7 @@ GamePlay.prototype = {
 		hitPlatformWrathEnemy = game.physics.arcade.collide(wrathG, platforms);
 		hitPlatformEnvyEnemy = game.physics.arcade.collide(envyG, platforms);
 		hitPlatformFearEnemy = game.physics.arcade.collide(fearG, platforms);
+		hitPlatformWidowEnemy = game.physics.arcade.collide(widowG, platforms);
 
 		//checks collision between Enemy and Player
 	    attacked = game.physics.arcade.collide(ghost, player);
@@ -548,12 +559,14 @@ GamePlay.prototype = {
 	    attackedEnvy = game.physics.arcade.collide(envyG, player);
 	    attackedFear = game.physics.arcade.collide(fearG, player);
 	    attackedFlame = game.physics.arcade.collide(flames, player);
+	    attackedWidow = game.physics.arcade.collide(widowG, player);
 
 	    //checks obstacle collision with enemy and obstacles
 	    hitObstacleEnemy = game.physics.arcade.collide(ghost, obstacles);
 	    hitObstacleWrathEnemy = game.physics.arcade.collide(wrathG, obstacles);
 	    hitObstacleEnvyEnemy = game.physics.arcade.collide(envyG, obstacles);
 	    hitObstacleFearEnemy = game.physics.arcade.collide(fearG, obstacles);
+	    hitObstacleWidowEnemy = game.physics.arcade.collide(widowG, obstacles);
 
 	    //checks collision with ghost with each other
 	    ghostCollision = game.physics.arcade.collide(ghost, ghost);
@@ -573,6 +586,7 @@ GamePlay.prototype = {
 	    dieWrath = game.physics.arcade.overlap(heart, wrathG, dieWrathGhost, null, this);
 	    dieEnvy = game.physics.arcade.overlap(heart, envyG, dieEnvyGhost, null, this);
 	    dieFear = game.physics.arcade.overlap(heart, fearG, dieFearGhost, null, this);
+	    dieWidow = game.physics.arcade.overlap(heart, widowG, dieWidow, null, this);
 		function dieWrathGhost(hearticles, wrathG){
 			wrathG.kill();
 			hearticles.kill();
@@ -584,6 +598,13 @@ GamePlay.prototype = {
 		function dieFearGhost(hearticles, fearG){
 			fearG.kill();
 			hearticles.kill();
+		}
+		function dieWidow(hearticles, widow){
+			hearticles.kill();
+			widowDeathCounter++;
+			if(widowDeathCounter == 20){
+				widowG.kill();
+			}
 		}
 
 		//if player reaches certain point, wand spawns.
@@ -669,21 +690,25 @@ GamePlay.prototype = {
 				ver4.play('', 0, 0.25, true);
 		    	music4 = true;
 			}
+		}if(player.x > 17000){
+			if(!widow){
+				this.spawnWidow();
+			}
 		}
 	},
 
 	//debug info
 	render: function(){
 		game.debug.body(player);
-		game.debug.body(obstacles);
-		//hearticles.forEach(game.debug.body,game.debug,"#dd00dd",false);
+		//game.debug.body(obstacles);
+		//widowG.forEach(game.debug.body,game.debug,"#dd00dd",false);
 		game.debug.spriteInfo(player, 32, 32);
 	},
 
 	//if player is attacked deplete health
 	//if counter reaches 7, restart game!
 	attackedCounter: function(){
-		if(attacked || attackedWrath || attackedFlame || attackedEnvy || attackedFear){
+		if(attacked || attackedWrath || attackedFlame || attackedEnvy || attackedFear || attackedWidow){
 			wall.play('', 0, 0.25, false);
 			counter++;
 			if(counter == 1){
@@ -829,6 +854,15 @@ GamePlay.prototype = {
 	 	}
 	},
 
+	//spawns widow enemy
+	spawnWidow: function(){
+		if(!widow){
+	 		widow = new Widow(game,'widow', '', 17800);
+     		widowG.add(widow);
+	 		widow = true;
+	 	}
+	},
+
 	//kills hearticles after a certain time.
 	//will comment out if unused
 	//killHearticles: function(){
@@ -856,6 +890,7 @@ GameOver.prototype = {
 		ver1.stop();
 		ver2.stop();
 		ver3.stop();
+		ver4.stop();
 		opening.stop();
 
 		//adds end button
@@ -870,6 +905,7 @@ GameOver.prototype = {
 	update: function(){
 		//console.log("Gameover: Update");
 		counter = 0;
+		widowDeathCounter = 0;
 		oneWand = false;
 		wandAttack = false;
 		firstGreen = false;
@@ -897,6 +933,7 @@ GameOver.prototype = {
 		fifthFear = false;
 		sixthFear = false;
 		seventhFear = false;
+		widow = false;
 		music3 = false;
 		music4 = false;
 	}
