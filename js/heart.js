@@ -10,7 +10,6 @@ function Heart(game,key){
 	this.body.bounce.y = 0.2;
 	this.body.setSize(25, 30, 35, 25);
 	this.shootHeart();
-
 }
 
 Heart.prototype = Object.create(Phaser.Sprite.prototype);

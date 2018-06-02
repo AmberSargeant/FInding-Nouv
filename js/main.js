@@ -91,6 +91,8 @@ var attackedFlame;
 var music3 = false;
 var music4 = false;
 var pauseSound;
+var explode;
+var spikes;
 var opening;
 
 //Decalares Mainmenu prototype
@@ -114,15 +116,27 @@ MainMenu.prototype = {
 		game.add.sprite(0, 0, 'titleScreen');
 
 		//adds start button 
-		startButton = game.add.sprite(0, 0, 'buttons');
-		startButton.animations.add('play',[0, 1],2, true);
+		startButton = game.add.sprite(650, 400, 'buttons');
+		startButton.alpha = 0.8;
+		startButton.enableBody = true;
+		game.physics.enable(startButton);
+   		startButton.anchor.set(0.5);
 		startButton.inputEnabled = true;
 		startButton.events.onInputDown.add(startGame, this);
+		//adds alpha inout on play button
+		game.input.addMoveCallback(p, this);
 
 		//function that enabled start button
 		function startGame(){
 			game.state.start('GamePlay');
 		}
+
+		//adds pointer
+		function p(pointer) {
+    		// console.log(pointer.);
+    		//console.log(pointer.event);
+		}
+
 	},
 	update: function() {
 		//resets all of the variables!
@@ -159,12 +173,18 @@ MainMenu.prototype = {
 		music3 = false;
 		music4 = false;
 
-		//plays startbutton animations
-		startButton.animations.play('play');
+		//if mouse hovers over start button..change alpha.
+		if(startButton.input.pointerOver()){
+        	startButton.alpha = 1;
+    	}
+    	else{
+        	startButton.alpha = 0.5;
+    	}
 	},
+
 	//debug info
 	render: function(){
-		game.debug.body(startButton);
+		//game.debug.body(startButton);
 	},
 }
 //Defines actual gameplay
@@ -195,6 +215,7 @@ GamePlay.prototype = {
 		game.load.atlas('fear', 'assets/img/fear.png', 'assets/img/fear.json');
 		game.load.atlas('widow', 'assets/img/widow.png', 'assets/img/widow.json');
 		game.load.atlas('plantObstacles', 'assets/img/plantObstacles.png', 'assets/img/plantObstacles.json');
+		game.load.atlas('spikes', 'assets/img/spikes.png', 'assets/img/spikes.json');
 		game.load.image('particle', 'assets/img/particle.png');
 		game.load.audio('ver1', 'assets/audio/Finding_Nouv_ver1.mp3');
 		game.load.audio('jump', 'assets/audio/jump4.mp3');
@@ -206,11 +227,12 @@ GamePlay.prototype = {
 		game.load.audio('wandSound', 'assets/audio/wand2.mp3');
 		game.load.audio('wandAttackSound', 'assets/audio/wandAttackSound.mp3');
 		game.load.audio('pauseSound', 'assets/audio/pause.mp3');
+		game.load.audio('explode', 'assets/audio/explode.mp3');
 		game.load.image('pause', 'assets/img/pause.png');
 	},
 	//creates the assets
 	create: function(){
-		console.log("Gameplay: Create");
+		 //console.log("Gameplay: Create");
 		 //Manages Music and Sound effects!
 		 ver1 = game.add.audio('ver1');
 		 ver2 = game.add.audio('ver2');
@@ -221,6 +243,7 @@ GamePlay.prototype = {
 		 wall = game.add.audio('wall');
 		 walk = game.add.audio('walk');
 		 wandSound = game.add.audio('wandSound');
+		 explode = game.add.audio('explode');
 		 jump = game.add.audio('jump');
 		 wandAttackSound = game.add.audio('wandAttackSound');
  		//stops opening music
@@ -495,6 +518,7 @@ GamePlay.prototype = {
    		 widowG = game.add.group();
    		 hearticles = game.add.group();
    		 flames = game.add.group();
+   		 spikesG = game.add.group();
   
    		 //if player is near ghost every.5 seconds health goes down.
    		 game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
@@ -590,20 +614,24 @@ GamePlay.prototype = {
 		function dieWrathGhost(hearticles, wrathG){
 			wrathG.kill();
 			hearticles.kill();
+			explode.play('', 0, 0.25, false);
 		}
 		function dieEnvyGhost(hearticles, envyG){
 			envyG.kill();
 			hearticles.kill();
+			explode.play('', 0, 0.25, false);
 		}
 		function dieFearGhost(hearticles, fearG){
 			fearG.kill();
 			hearticles.kill();
+			explode.play('', 0, 0.25, false);
 		}
 		function dieWidow(hearticles, widow){
 			hearticles.kill();
 			widowDeathCounter++;
 			if(widowDeathCounter == 20){
 				widowG.kill();
+				explode.play('', 0, 0.25, false);
 			}
 		}
 
@@ -701,7 +729,7 @@ GamePlay.prototype = {
 	render: function(){
 		game.debug.body(player);
 		//game.debug.body(obstacles);
-		//widowG.forEach(game.debug.body,game.debug,"#dd00dd",false);
+		widowG.forEach(game.debug.body,game.debug,"#dd00dd",false);
 		game.debug.spriteInfo(player, 32, 32);
 	},
 
@@ -873,18 +901,20 @@ GamePlay.prototype = {
 //Defines gameover function
 var GameOver = function(game){};
 var endButton;
+var endButton2;
 
 GameOver.prototype = {
 	//preloads assets
 	preload: function(){
 		//console.log("Gameover:Preload");
-		
+		game.load.image('gameover', 'assets/img/gameover.png');
+		game.load.atlas('buttons2', 'assets/img/buttons2.png', 'assets/img/buttons2.json');
 	},
 	//creates assets
 	create: function(){
 		//console.log("Gameover: create");
-		//help text
-		helpText = game.add.text(320, 380, 'click weird particle thingy to startover', { fontSize: '16px', fill: '#FF0000' });
+		//adds gameoverimage
+		game.add.sprite(0, 0, 'gameover');
 
 		//stops all music
 		ver1.stop();
@@ -893,13 +923,41 @@ GameOver.prototype = {
 		ver4.stop();
 		opening.stop();
 
-		//adds end button
-		endButton = game.add.sprite(0, 0, 'particle');
+		//adds gameover buttons
+		endButton = game.add.sprite(300, 550, 'buttons2');
+		endButton.animations.add('playAgain',[1],4, false);
 		endButton.inputEnabled = true;
-		endButton.events.onInputDown.add(endGame, this);
+		endButton.events.onInputDown.add(startOverGame, this);
+		endButton.alpha = 0.8;
+		endButton.enableBody = true;
+		game.physics.enable(endButton);
+   		endButton.anchor.set(0.5);
+   		endButton2 = game.add.sprite(500, 550, 'buttons2');
+		endButton2.animations.add('mainMenu',[0],4, false);
+		endButton2.inputEnabled = true;
+		endButton2.events.onInputDown.add(endGame, this);
+		endButton2.alpha = 0.8;
+		endButton2.enableBody = true;
+		game.physics.enable(endButton2);
+   		endButton2.anchor.set(0.5);
+		//adds alpha input on play button
+		game.input.addMoveCallback(p, this);
+
+		//adds functionality to end button
+		function startOverGame(){
+			game.state.start('GamePlay');
+		}
+
 		//adds functionality to end button
 		function endGame(){
-			game.state.start('GamePlay');
+			game.state.start('MainMenu');
+		}
+
+
+		//adds pointer
+		function p(pointer) {
+    		// console.log(pointer.);
+    		//console.log(pointer.event);
 		}
 	},
 	update: function(){
@@ -936,6 +994,24 @@ GameOver.prototype = {
 		widow = false;
 		music3 = false;
 		music4 = false;
+
+		//if mouse hovers over startover/mainmenu button..change alpha.
+		if(endButton.input.pointerOver()){
+        	endButton.alpha = 1;
+    	}
+    	else{
+        	endButton.alpha = 0.5;
+    	}
+		if(endButton2.input.pointerOver()){
+        	endButton2.alpha = 1;
+    	}
+    	else{
+        	endButton2.alpha = 0.5;
+    	}
+
+		//sets frame to playagain
+    	endButton.play('playAgain');
+    	endButton2.play('mainMenu');
 	}
 }
 

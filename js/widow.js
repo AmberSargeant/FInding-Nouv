@@ -1,7 +1,6 @@
 function Widow(game,key, frame, position){
 	//call to Phaser.Sprite // new Sprite(game, x, y, key, frame)
 	Phaser.Sprite.call(this, game, 64,game.world.height-60,key,frame);
-
 	// add properties
 	this.anchor.set(0.5);
 	this.x = position;
@@ -17,6 +16,8 @@ function Widow(game,key, frame, position){
 	game.time.events.loop(Phaser.Timer.SECOND*3, this.moveWidow, this);
 	this.minX = position - 300;
 	this.maxX = position + 300 ;
+	this.spikeLoop = game.time.events.loop(Phaser.Timer.SECOND*3, this.oneSpike, this);
+	this.moveLoop = game.time.events.loop(Phaser.Timer.SECOND*3, this.moveWidow, this);
 }
 
 Widow.prototype = Object.create(Phaser.Sprite.prototype);
@@ -44,5 +45,17 @@ Widow.prototype.moveWidow = function(){
     	    this.scale.x = 1;
 			this.play('walk');
 	}
+}
 
+Widow.prototype.oneSpike = function(){
+	this.spikes = new Spikes(game,'spikes', this);
+	//console.log(flame);
+    spikesG.add(this.spikes);
+}
+
+Widow.prototype.kill = function(){
+	game.time.events.remove(this.spikeLoop);
+	game.time.events.remove(this.moveLoop);
+	this.spikes.kill();
+	Phaser.Sprite.prototype.kill.call(this);
 }

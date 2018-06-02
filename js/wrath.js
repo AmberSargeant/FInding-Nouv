@@ -1,7 +1,6 @@
 function Wrath(game,key, frame, position){
 	//call to Phaser.Sprite // new Sprite(game, x, y, key, frame)
 	Phaser.Sprite.call(this, game, 64,game.world.height-60,key,frame);
-
 	// add properties
 	this.anchor.set(0.5);
 	this.x = position;
@@ -50,7 +49,6 @@ Wrath.prototype.oneFlame = function(){
 }
 
 Wrath.prototype.moveWrath = function(){
-
 	this.body.velocity.x = game.rnd.integerInRange(-100,100);
 	if(this.body.velocity.x < 0){
 			this.movingWrathRight = false;
