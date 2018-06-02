@@ -88,6 +88,7 @@ var dieEnvy;
 var dieFear;
 var dieWidow;
 var attackedFlame;
+var attackedSpikes;
 var music3 = false;
 var music4 = false;
 var pauseSound;
@@ -583,6 +584,7 @@ GamePlay.prototype = {
 	    attackedEnvy = game.physics.arcade.collide(envyG, player);
 	    attackedFear = game.physics.arcade.collide(fearG, player);
 	    attackedFlame = game.physics.arcade.collide(flames, player);
+	    attackedSpikes = game.physics.arcade.collide(spikesG, player);
 	    attackedWidow = game.physics.arcade.collide(widowG, player);
 
 	    //checks obstacle collision with enemy and obstacles
@@ -736,7 +738,7 @@ GamePlay.prototype = {
 	//if player is attacked deplete health
 	//if counter reaches 7, restart game!
 	attackedCounter: function(){
-		if(attacked || attackedWrath || attackedFlame || attackedEnvy || attackedFear || attackedWidow){
+		if(attacked || attackedWrath || attackedFlame || attackedEnvy || attackedFear || attackedWidow || attackedSpikes){
 			wall.play('', 0, 0.25, false);
 			counter++;
 			if(counter == 1){

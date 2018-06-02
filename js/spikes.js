@@ -16,7 +16,7 @@ Spikes.prototype = Object.create(Phaser.Sprite.prototype);
 Spikes.prototype.constructor = Spikes;
 
 Spikes.prototype.update = function(){
-	if(this.x > this.widow.x +200 || this.x < this.widow.x -200){
+	if(this.x > this.widow.x +500 || this.x < this.widow.x -500){
 		this.kill();
 	}
 	this.animations.play('spikes');
