@@ -8,7 +8,6 @@ function Heart(game,key){
 	this.enableBody = true;
 	this.body.collideWorldBounds = true;
 	this.body.bounce.y = 0.2;
-	this.body.setSize(25, 30, 35, 25);
 	this.shootHeart();
 }
 
