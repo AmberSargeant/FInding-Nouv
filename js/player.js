@@ -38,7 +38,7 @@ Player.prototype.update = function(){
 			&& this.body.touching.down ||  attacked && game.input.keyboard.isDown(Phaser.Keyboard.W) && this.body.touching.down || attackedFear && game.input.keyboard.isDown(Phaser.Keyboard.W)
 			&& this.body.touching.down){
 			//makes player go up
-            this.body.velocity.y = -400; 
+            this.body.velocity.y = -420; 
             jump.play('', 0, 0.25, false);        
     	}
 	}

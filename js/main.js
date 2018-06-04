@@ -609,7 +609,7 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(17580, game.world.height - 150, 'plantObstacles', 14);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(17600, game.world.height - 100, 'plantObstacles', 16);
+         var obstacle1 = obstacles.create(17600, game.world.height - 100, 'plantObstacles', 16); // test
          obstacle1.body.immovable = true;
          //helptext
 
