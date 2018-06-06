@@ -96,6 +96,7 @@ var attackedFlame;
 var attackedSpikes;
 var music3 = false;
 var music4 = false;
+var endingSound;
 var pauseSound;
 var explode;
 var spikes;
@@ -103,7 +104,11 @@ var opening;
 var pauseButton;
 var unpauseButton;
 var backButton;
+var creditsButton;
 var checkPaused = true;
+var checkCredits = true;
+var wandText;
+var creditScreen;
 
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
@@ -112,10 +117,12 @@ MainMenu.prototype = {
 		//console.log('MainMenu: preload');
 		game.load.image('particle', 'assets/img/particle.png');
 		game.load.image('titleScreen', 'assets/img/findingnouvtitle.png');
+		game.load.image('creditScreen', 'assets/img/creditScreen.png');
 		game.load.atlas('buttons', 'assets/img/buttons.png', 'assets/img/buttons.json');
+		game.load.atlas('credits', 'assets/img/credits.png', 'assets/img/credits.json');
 		game.load.audio('opening', 'assets/audio/Finding_Nouv_opening.mp3');
 	},
-	//creates all of the assets
+	//creates all of the assets 
 	create: function(){
 		//console.log("MainMenu: create'")
 		//defines music
@@ -133,12 +140,38 @@ MainMenu.prototype = {
    		startButton.anchor.set(0.5);
 		startButton.inputEnabled = true;
 		startButton.events.onInputDown.add(startGame, this);
+
+		//adds credits button
+		creditsButton = game.add.sprite(650, 500, 'credits');
+		creditsButton.alpha = 0.8;
+		creditsButton.enableBody = true;
+		game.physics.enable(creditsButton);
+   		creditsButton.anchor.set(0.5);
+		creditsButton.inputEnabled = true;
+		creditsButton.events.onInputDown.add(credits, this);
+
 		//adds alpha inout on play button
 		game.input.addMoveCallback(p, this);
 
-		//function that enabled start button
+		//function that enables start button
 		function startGame(){
 			game.state.start('GamePlay');
+		}
+
+		//function that modifies credits and its pop up.
+		function credits(){
+			if(checkCredits){
+			game.paused = true;
+			creditScreen = game.add.sprite(0, 0 ,'creditScreen');
+			creditScreen.inputEnabled = true;
+			creditScreen.events.onInputDown.add(unpauseCredits, this);
+			checkCredits = false;
+			}
+		}
+
+		function unpauseCredits(){		
+			game.paused = false;
+			creditScreen.destroy();
 		}
 
 		//adds pointer
@@ -189,13 +222,19 @@ MainMenu.prototype = {
 		music3 = false;
 		music4 = false;
 		checkPaused = true;
+		checkCredits = true;
 
-		//if mouse hovers over start button..change alpha.
+		//if mouse hovers over start/credita button..change alpha.
 		if(startButton.input.pointerOver()){
         	startButton.alpha = 1;
     	}
     	else{
         	startButton.alpha = 0.5;
+    	}if(creditsButton.input.pointerOver()){
+        	creditsButton.alpha = 1;
+    	}
+    	else{
+        	creditsButton.alpha = 0.5;
     	}
 	},
 
@@ -221,6 +260,8 @@ GamePlay.prototype = {
         game.load.image('obstacle6', 'assets/img/obstacle6.png');
         game.load.image('arm', 'assets/img/arm.png');
         game.load.image('arm2', 'assets/img/arm2.png');
+        game.load.image('helpText', 'assets/img/text1.png');
+        game.load.image('wandText', 'assets/img/text2.png');
 		game.load.atlas('greenGhost', 'assets/img/greenGhost.png', 'assets/img/greenGhost.json');
 		game.load.atlas('player', 'assets/img/player.png', 'assets/img/player.json');
 		game.load.atlas('colorbar', 'assets/img/colorbar.png', 'assets/img/colorbar.json');
@@ -234,7 +275,6 @@ GamePlay.prototype = {
 		game.load.atlas('plantObstacles', 'assets/img/plantObstacles.png', 'assets/img/plantObstacles.json');
 		game.load.atlas('spikes', 'assets/img/spikes.png', 'assets/img/spikes.json');
 		game.load.atlas('pausemenubuttons', 'assets/img/pausemenubuttons.png', 'assets/img/pausemenubuttons.json');
-		game.load.image('particle', 'assets/img/particle.png');
 		game.load.audio('ver1', 'assets/audio/Finding_Nouv_ver1.mp3');
 		game.load.audio('jump', 'assets/audio/jump4.mp3');
 		game.load.audio('ver2', 'assets/audio/Finding_Nouv_ver2.mp3');
@@ -245,7 +285,6 @@ GamePlay.prototype = {
 		game.load.audio('wandSound', 'assets/audio/wand2.mp3');
 		game.load.audio('wandAttackSound', 'assets/audio/wandAttackSound.mp3');
 		game.load.audio('pauseSound', 'assets/audio/pause.mp3');
-		game.load.audio('explode', 'assets/audio/explode.mp3');
 		game.load.image('pause', 'assets/img/pause.png');
 	},
 	//creates the assets
@@ -288,7 +327,7 @@ GamePlay.prototype = {
    		 obstacles = game.add.group();
 	 	 obstacles.enableBody = true;
 
-    	 //makes obstacles
+    	 //makes obstacles (Sorry this is nasty)
     	 var obstacle1 = obstacles.create(540, game.world.height - 200, 'obstacle5');
     	 obstacle1.body.immovable = true;
     	 var obstacle1 = obstacles.create(580, game.world.height - 300, 'obstacle5');
@@ -465,7 +504,7 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(9360, game.world.height - 130, 'plantObstacles', 7);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(9248, game.world.height - 130, 'plantObstacles', 12);
+         var obstacle1 = obstacles.create(9248, game.world.height - 110, 'plantObstacles', 12);
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(9100, game.world.height - 230, 'plantObstacles', 9);
          obstacle1.body.immovable = true;
@@ -506,9 +545,9 @@ GamePlay.prototype = {
    		 
    		 var obstacle1 = obstacles.create(11100, game.world.height - 90, 'plantObstacles', 8);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(11600, game.world.height - 130, 'plantObstacles', 12);
+         var obstacle1 = obstacles.create(11600, game.world.height - 110, 'plantObstacles', 12);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(11680, game.world.height - 230, 'plantObstacles', 9);
+         var obstacle1 = obstacles.create(11680, game.world.height - 210, 'plantObstacles', 9);
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(11750, game.world.height - 230, 'plantObstacles', 17);
          obstacle1.body.immovable = true;
@@ -698,7 +737,8 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true; 
 
    		 //helptext
-   		 helpText = game.add.text(50, 90, 'Press pause button to pause the game.', { fontSize: '16px', fill: '#EEE8AA' });
+   		 helpText = game.add.sprite(-30,0, 'helpText')
+   		 wandText = game.add.sprite(5260,0, 'wandText')
 
    		 //adds Health Bar and camera follows it!
 	     healthBar = game.add.sprite(9,9, 'colorbar')
@@ -713,10 +753,9 @@ GamePlay.prototype = {
 		 healthBar.animations.add('six', Phaser.Animation.generateFrameNames('bar',6, 7, ''),30, true);
 		 healthBar.animations.add('seven', Phaser.Animation.generateFrameNames('bar',7, 7,''),30, false);	
 
-   		 //adds player
+   		 //adds player and is followed by camera
    		 player = new Player(game,'player');
    		 game.add.existing(player);
-		 //camera follows player
    		 game.camera.follow(player, null, 0.1, 0.1);
 
    		 //adds enemy and weapon/item group
@@ -728,9 +767,6 @@ GamePlay.prototype = {
    		 hearticles = game.add.group();
    		 flames = game.add.group();
    		 spikesG = game.add.group();
-  
-   		 //if player is near ghost every.5 seconds health goes down.
-   		 game.time.events.loop(Phaser.Timer.SECOND*.3, this.attackedCounter, this);
    	
 		 //adds pause button
 		 pauseButton = game.add.sprite(750, 0, 'pause');
@@ -785,9 +821,7 @@ GamePlay.prototype = {
 	},
 	update: function (){
 		checkPaused = true;
-		//checks collision with hearts and obstacles!
-		game.physics.arcade.collide(hearticles, obstacles);
-
+	
 		//checks collision with platform for both enemy and player
 		hitPlatform = game.physics.arcade.collide(player, platforms);
 		hitPlatformEnemy = game.physics.arcade.collide(ghost, platforms);
@@ -797,6 +831,7 @@ GamePlay.prototype = {
 		hitPlatformWidowEnemy = game.physics.arcade.collide(widowG, platforms);
 
 		//checks collision between Enemy and Player
+		/*
 	    attacked = game.physics.arcade.collide(ghost, player);
 	    attackedWrath = game.physics.arcade.collide(wrathG, player);
 	    attackedEnvy = game.physics.arcade.collide(envyG, player);
@@ -804,6 +839,7 @@ GamePlay.prototype = {
 	    attackedFlame = game.physics.arcade.collide(flames, player);
 	    attackedSpikes = game.physics.arcade.collide(spikesG, player);
 	    attackedWidow = game.physics.arcade.collide(widowG, player);
+	    */
 
 	    //checks obstacle collision with enemy and obstacles
 	    hitObstacleEnemy = game.physics.arcade.collide(ghost, obstacles);
@@ -820,6 +856,7 @@ GamePlay.prototype = {
 
 	    //checks overlap with player and wand, and collects wand if player overlaps
 	    game.physics.arcade.overlap(player, wand, getWand, null, this);
+
 	    function getWand(player, wand){
 	    	wand.kill();
 	    	wandSound.play('', 0, 0.25, false);
@@ -831,6 +868,7 @@ GamePlay.prototype = {
 	    dieEnvy = game.physics.arcade.overlap(heart, envyG, dieEnvyGhost, null, this);
 	    dieFear = game.physics.arcade.overlap(heart, fearG, dieFearGhost, null, this);
 	    dieWidow = game.physics.arcade.overlap(heart, widowG, dieWidow, null, this);
+
 		function dieWrathGhost(hearticles, wrathG){
 			wrathG.kill();
 			hearticles.kill();
@@ -970,8 +1008,8 @@ GamePlay.prototype = {
 
 	//if player is attacked deplete health
 	//if counter reaches 7, restart game!
-	attackedCounter: function(){
-		if(attacked || attackedWrath || attackedFlame || attackedEnvy || attackedFear || attackedWidow || attackedSpikes){
+	/*attackedCounter: function(){
+		if(attacked || attackedWrath || attackedEnvy || attackedFear || attackedWidow || attackedSpikes || attackedFlame){
 			wall.play('', 0, 0.25, false);
 			counter++;
 			if(counter == 1){
@@ -996,9 +1034,9 @@ GamePlay.prototype = {
 				//console.log("7 health");
 				healthBar.animations.play("seven");	
 				game.state.start('GameOver');
-			}				
+			}			
 		}
-	},
+	},*/
 
 	//prevents multiple wands being spammed
 	makewand: function(){
@@ -1165,7 +1203,6 @@ GamePlay.prototype = {
 	 		widow = true;
 	 	}
 	},
-
 	//kills hearticles after a certain time.
 	//will comment out if unused
 	//killHearticles: function(){
@@ -1184,6 +1221,7 @@ GameOver.prototype = {
 		//console.log("Gameover:Preload");
 		game.load.image('gameover', 'assets/img/gameover.png');
 		game.load.atlas('buttons2', 'assets/img/buttons2.png', 'assets/img/buttons2.json');
+		game.load.audio('endingSong', 'assets/audio/Finding_Nouv_ending.mp3');
 	},
 	//creates assets
 	create: function(){
@@ -1191,12 +1229,16 @@ GameOver.prototype = {
 		//adds gameoverimage
 		game.add.sprite(0, 0, 'gameover');
 
-		//stops all music
+		//adds ending song
+		endingSong = game.add.audio('endingSong');
+
+		//stops all music and plays ending song
 		ver1.stop();
 		ver2.stop();
 		ver3.stop();
 		ver4.stop();
 		opening.stop();
+		endingSong.play('', 0, 0.25, true);
 
 		//adds gameover buttons
 		endButton = game.add.sprite(300, 550, 'buttons2');
@@ -1221,11 +1263,13 @@ GameOver.prototype = {
 		//adds functionality to end button
 		function startOverGame(){
 			game.state.start('GamePlay');
+			endingSong.stop();
 		}
 
 		//adds functionality to end button
 		function endGame(){
 			game.state.start('MainMenu');
+			endingSong.stop();
 		}
 
 
@@ -1276,6 +1320,7 @@ GameOver.prototype = {
 		music3 = false;
 		music4 = false;
 		checkPaused = true;
+		checkCredits = true;
 
 		//if mouse hovers over startover/mainmenu button..change alpha.
 		if(endButton.input.pointerOver()){

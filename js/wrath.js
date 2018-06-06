@@ -40,6 +40,19 @@ Wrath.prototype.update = function(){
     	this.scale.x = -1;
 		this.play('walk');
 	}
+
+	game.physics.arcade.overlap(this, player, attackWrath, null, this);
+	game.physics.arcade.overlap(flames, player, attackFlame, null, this);
+	
+	function attackWrath(wrath, player){
+		player.takeDamage();
+	
+	}
+	function attackFlame(player, flames){
+		player.takeDamage();
+		this.flame.kill();
+	}
+
 }
 
 Wrath.prototype.oneFlame = function(){
@@ -66,4 +79,11 @@ Wrath.prototype.kill = function(){
 	game.time.events.remove(this.moveLoop);
 	this.flame.kill();
 	Phaser.Sprite.prototype.kill.call(this);
+	
 }
+
+
+
+
+
+
