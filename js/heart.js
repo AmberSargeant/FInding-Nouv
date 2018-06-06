@@ -15,7 +15,7 @@ Heart.prototype = Object.create(Phaser.Sprite.prototype);
 Heart.prototype.constructor = Heart;
 
 Heart.prototype.update = function(){
-	if(this.x > player.x +200 || this.x < player.x -200){
+	if(this.x > player.x +250 || this.x < player.x -250){
 		this.kill();
 	}
 }

@@ -24,6 +24,29 @@ Wrath.prototype.constructor = Wrath;
 
 Wrath.prototype.update = function(){
 
+<<<<<<< HEAD
+=======
+	}
+	if(this.x > this.maxX){
+		this.body.velocity.x = -100;
+		this.movingWrathRight = false;
+    	this.scale.x = -1;
+		this.play('walk');
+	}
+
+	game.physics.arcade.overlap(this, player, attackWrath, null, this);
+	game.physics.arcade.overlap(flames, player, attackFlame, null, this);
+	
+	function attackWrath(wrath, player){
+		player.takeDamage();
+	
+	}
+	function attackFlame(player, flames){
+		player.takeDamage();
+		this.flame.kill();
+	}
+
+>>>>>>> upstream/master
 }
 
 Wrath.prototype.oneFlame = function(){
@@ -42,4 +65,22 @@ Wrath.prototype.moveWrath = function(){
     	    this.scale.x = 1;
 			this.play('walk');
 	}
+<<<<<<< HEAD
 }
+=======
+
+}
+Wrath.prototype.kill = function(){
+	game.time.events.remove(this.flameLoop);
+	game.time.events.remove(this.moveLoop);
+	this.flame.kill();
+	Phaser.Sprite.prototype.kill.call(this);
+	
+}
+
+
+
+
+
+
+>>>>>>> upstream/master
