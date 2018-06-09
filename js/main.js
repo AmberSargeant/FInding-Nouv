@@ -109,6 +109,8 @@ var checkPaused = true;
 var checkCredits = true;
 var wandText;
 var creditScreen;
+var cloud;
+var cloud2;
 
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
@@ -262,6 +264,9 @@ GamePlay.prototype = {
         game.load.image('arm2', 'assets/img/arm2.png');
         game.load.image('helpText', 'assets/img/text1.png');
         game.load.image('wandText', 'assets/img/text2.png');
+        game.load.image('vine', 'assets/img/vine3.png');
+        game.load.image('vine2', 'assets/img/vine2.png');
+        game.load.atlas('cloud', 'assets/img/cloud.png', 'assets/img/cloud.json');
 		game.load.atlas('greenGhost', 'assets/img/greenGhost.png', 'assets/img/greenGhost.json');
 		game.load.atlas('player', 'assets/img/player.png', 'assets/img/player.json');
 		game.load.atlas('colorbar', 'assets/img/colorbar.png', 'assets/img/colorbar.json');
@@ -275,6 +280,7 @@ GamePlay.prototype = {
 		game.load.atlas('plantObstacles', 'assets/img/plantObstacles.png', 'assets/img/plantObstacles.json');
 		game.load.atlas('spikes', 'assets/img/spikes.png', 'assets/img/spikes.json');
 		game.load.atlas('pausemenubuttons', 'assets/img/pausemenubuttons.png', 'assets/img/pausemenubuttons.json');
+		game.load.audio('explode', 'assets/audio/explode.mp3');
 		game.load.audio('ver1', 'assets/audio/Finding_Nouv_ver1.mp3');
 		game.load.audio('jump', 'assets/audio/jump4.mp3');
 		game.load.audio('ver2', 'assets/audio/Finding_Nouv_ver2.mp3');
@@ -326,6 +332,14 @@ GamePlay.prototype = {
    		 //adds obstacles to group
    		 obstacles = game.add.group();
 	 	 obstacles.enableBody = true;
+
+	 	 //adds cloud obstacles
+	 	 clouds = game.add.group();
+	 	 clouds.enableBody = true;
+	 	
+	 	 //adds vine obstacles
+	 	 vines = game.add.group();
+	 	 vines.enableBody = false;
 
     	 //makes obstacles (Sorry this is nasty)
     	 var obstacle1 = obstacles.create(540, game.world.height - 200, 'obstacle5');
@@ -508,7 +522,7 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(9100, game.world.height - 230, 'plantObstacles', 9);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(9360, game.world.height - 230, 'plantObstacles', 17);
+         var obstacle1 = obstacles.create(9395, game.world.height - 220, 'plantObstacles', 17);
          obstacle1.body.immovable = true;
 
          var obstacle1 = obstacles.create(9502, game.world.height - 200, 'plantObstacles', 17);
@@ -522,6 +536,56 @@ GamePlay.prototype = {
 
          var obstacle1 = obstacles.create(9860, game.world.height - 50, 'plantObstacles', 5);
          obstacle1.body.immovable = true;
+
+         cloud = game.add.sprite(9900, game.world.height - 450, 'cloud',0); //cloud
+         obstacles.add(cloud);
+         cloud.animations.add('cloud',[0, 1, 2],3, true);
+         cloud.body.immovable = true;
+         cloud.body.setSize(100, 30, 60, 85);
+
+         cloud2 = game.add.sprite(10100, game.world.height - 500, 'cloud',0); 
+         obstacles.add(cloud2);
+         cloud2.animations.add('cloud',[0, 1, 2],3, true);
+         cloud2.body.immovable = true;
+         cloud2.body.setSize(100, 30, 60, 85);
+
+         cloud3 = game.add.sprite(12100, game.world.height - 450, 'cloud',0); 
+         obstacles.add(cloud3);
+         cloud3.animations.add('cloud',[0, 1, 2],3, true);
+         cloud3.body.immovable = true;
+         cloud3.body.setSize(100, 30, 60, 85);
+
+         cloud4 = game.add.sprite(14092, game.world.height - 450, 'cloud',0); 
+         obstacles.add(cloud4);
+         cloud4.animations.add('cloud',[0, 1, 2],3, true);
+         cloud4.body.immovable = true;
+         cloud4.body.setSize(100, 30, 60, 85);
+
+         cloud5 = game.add.sprite(10748, game.world.height - 350, 'cloud',0); 
+         obstacles.add(cloud5);
+         cloud5.animations.add('cloud',[0, 1, 2],3, true);
+         cloud5.body.immovable = true;
+         cloud5.body.setSize(100, 30, 60, 85);
+
+         cloud6 = game.add.sprite(15153, game.world.height - 450, 'cloud',0); 
+         obstacles.add(cloud6);
+         cloud6.animations.add('cloud',[0, 1, 2],3, true);
+         cloud6.body.immovable = true;
+         cloud6.body.setSize(100, 30, 60, 85);
+
+         cloud7 = game.add.sprite(16072, game.world.height - 450, 'cloud',0); 
+         obstacles.add(cloud7);
+         cloud7.animations.add('cloud',[0, 1, 2],3, true);
+         cloud7.body.immovable = true;
+         cloud7.body.setSize(100, 30, 60, 85);
+
+         cloud8 = game.add.sprite(17930, game.world.height - 400, 'cloud',0); 
+         obstacles.add(cloud8);
+         cloud8.animations.add('cloud',[0, 1, 2],3, true);
+         cloud8.body.immovable = true;
+         cloud8.body.setSize(120, 30, 50, 85);
+
+
          var obstacle1 = obstacles.create(9980, game.world.height - 100, 'plantObstacles', 7);
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(10080, game.world.height - 30, 'plantObstacles', 15);
@@ -735,6 +799,39 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(17600, game.world.height - 100, 'plantObstacles', 16);
          obstacle1.body.immovable = true; 
+        
+         var vine1 = vines.create(18100, game.world.height - 720, 'vine');
+         var obstacle1 = obstacles.create(18300, game.world.height - 50, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(18270, game.world.height - 100, 'plantObstacles', 17);
+         obstacle1.scale.x = -1;
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(18285, game.world.height - 200, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(18320, game.world.height - 360, 'plantObstacles', 17);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(18250, game.world.height - 250, 'plantObstacles', 17);
+         obstacle1.scale.x = -1;
+         obstacle1.body.immovable = true; 
+
+         var obstacle1 = obstacles.create(18340, game.world.height - 100, 'plantObstacles', 10);
+         obstacle1.body.immovable = true; 
+
+         var vine2 = vines.create(17600, game.world.height - 720, 'vine');
+         var obstacle1 = obstacles.create(17800, game.world.height - 50, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(17770, game.world.height - 100, 'plantObstacles', 17);
+         obstacle1.scale.x = -1;
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(17785, game.world.height - 200, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(17820, game.world.height - 360, 'plantObstacles', 17);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(17750, game.world.height - 250, 'plantObstacles', 17);
+         obstacle1.scale.x = -1;
+         obstacle1.body.immovable = true; 
+
+
 
    		 //helptext
    		 helpText = game.add.sprite(-30,0, 'helpText')
@@ -820,6 +917,14 @@ GamePlay.prototype = {
 		}
 	},
 	update: function (){
+		cloud.animations.play('cloud');
+		cloud2.animations.play('cloud');
+		cloud3.animations.play('cloud');
+		cloud4.animations.play('cloud');
+		cloud5.animations.play('cloud');
+		cloud6.animations.play('cloud');
+		cloud7.animations.play('cloud');
+		cloud8.animations.play('cloud');			
 		checkPaused = true;
 	
 		//checks collision with platform for both enemy and player
@@ -847,12 +952,14 @@ GamePlay.prototype = {
 	    hitObstacleEnvyEnemy = game.physics.arcade.collide(envyG, obstacles);
 	    hitObstacleFearEnemy = game.physics.arcade.collide(fearG, obstacles);
 	    hitObstacleWidowEnemy = game.physics.arcade.collide(widowG, obstacles);
+	    hitObstacleWidowEnemy = game.physics.arcade.collide(widowG, vines);
 
 	    //checks collision with ghost with each other
 	    ghostCollision = game.physics.arcade.collide(ghost, ghost);
 
 	  	//checks obstacle collision with player
 	    hitObstaclePlayer = game.physics.arcade.collide(player, obstacles);
+	    //hitObstaclePlayer = game.physics.arcade.collide(player, clouds);
 
 	    //checks overlap with player and wand, and collects wand if player overlaps
 	    game.physics.arcade.overlap(player, wand, getWand, null, this);
@@ -1002,7 +1109,7 @@ GamePlay.prototype = {
 	render: function(){
 		//game.debug.body(player);
 		//game.debug.body(obstacles);
-		widowG.forEach(game.debug.body,game.debug,"#dd00dd",false);
+		//obstacles.forEach(game.debug.body,game.debug,"#dd00dd",false);
 		game.debug.spriteInfo(player, 32, 32);
 	},
 
