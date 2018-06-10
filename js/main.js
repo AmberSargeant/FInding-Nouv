@@ -1439,6 +1439,7 @@ GamePlay.prototype = {
 //creates ending cutscene
 	 spawnMe: function(){
 	 	if(!me){
+	 		game.camera.follow(player, null, 0.1, 0.1);
 	 		godMode = true;
 	 		me = game.add.sprite(player.x + 100, 530, 'nouv');
 			me.alpha = 0;
@@ -1448,7 +1449,7 @@ GamePlay.prototype = {
 			function fadeInMe(){
 				game.add.tween(me).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
 				player.scale.x = 1
-				game.time.events.add(Phaser.Timer.SECOND * 1, addBlack, this);
+				game.time.events.add(Phaser.Timer.SECOND * 3, addBlack, this);
 			}
 					function addBlack(){
 						endBlackScreen = game.add.sprite(0, 0, 'blackScreen')
