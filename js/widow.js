@@ -34,6 +34,15 @@ Widow.prototype.update = function(){
     	this.scale.x = -1;
 		this.play('walk');
 	}
+
+	attackedSpikes = game.physics.arcade.overlap(spikesG, player, spikeDamage, null, this);
+	function spikeDamage(player,spikesG){
+		player.takeDamage();
+	}
+
+	if(player.x > 17800){
+		game.camera.follow(this, null, 0.1, 0.1);
+	}
 }
 
 Widow.prototype.moveWidow = function(){
@@ -49,7 +58,6 @@ Widow.prototype.moveWidow = function(){
 
 Widow.prototype.oneSpike = function(){
 	this.spikes = new Spikes(game,'spikes', this);
-	//console.log(flame);
     spikesG.add(this.spikes);
 }
 
@@ -58,4 +66,5 @@ Widow.prototype.kill = function(){
 	game.time.events.remove(this.moveLoop);
 	this.spikes.kill();
 	Phaser.Sprite.prototype.kill.call(this);
+	widowDead = true;
 }

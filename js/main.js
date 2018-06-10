@@ -109,6 +109,33 @@ var checkPaused = true;
 var checkCredits = true;
 var wandText;
 var creditScreen;
+var blackScreen;
+var helpless;
+var pain;
+var scared;
+var today;
+var yes;
+var no;
+var point;
+var firstCountCheck = false;
+var secondCountCheck = false;
+var thirdCountCheck = false;
+var fourthCountCheck = false;
+var fifthCountCheck = false;var moving = true;
+var sixthCountCheck = false;
+var widowDead = false;
+var play = false;
+var moving = true;
+var me = false;
+var endBlackScreen;
+var godMode = false;
+var endScreen;
+var endButton;
+var endButton2;
+var pauseButton;
+var unpauseButton;
+var backButton;
+var cloud;
 
 //Decalares Mainmenu prototype
 MainMenu.prototype = {
@@ -117,8 +144,16 @@ MainMenu.prototype = {
 		//console.log('MainMenu: preload');
 		game.load.image('particle', 'assets/img/particle.png');
 		game.load.image('titleScreen', 'assets/img/findingnouvtitle.png');
+		game.load.image('blackScreen', 'assets/img/blackScreen.png');
 		game.load.image('creditScreen', 'assets/img/creditScreen.png');
 		game.load.atlas('buttons', 'assets/img/buttons.png', 'assets/img/buttons.json');
+		game.load.image('helpless', 'assets/img/helpless.png', 'assets/img/helpless.json');
+		game.load.image('pain', 'assets/img/pain.png', 'assets/img/pain.json');
+		game.load.image('scared', 'assets/img/scared.png', 'assets/img/scared.json');
+		game.load.image('today', 'assets/img/today.png', 'assets/img/today.json');
+		game.load.image('yes', 'assets/img/yes.png', 'assets/img/yes.json');
+		game.load.image('no', 'assets/img/no.png', 'assets/img/no.json');
+		game.load.image('point', 'assets/img/point.png', 'assets/img/point.json');
 		game.load.atlas('credits', 'assets/img/credits.png', 'assets/img/credits.json');
 		game.load.audio('opening', 'assets/audio/Finding_Nouv_opening.mp3');
 	},
@@ -127,6 +162,10 @@ MainMenu.prototype = {
 		//console.log("MainMenu: create'")
 		//defines music
 		opening = game.add.audio('opening');
+		ver1 = game.add.audio('ver1');
+		ver2 = game.add.audio('ver2');
+		ver3 = game.add.audio('ver3');
+		ver4 = game.add.audio('ver4');
 		opening.play('', 0, 0.25, true);
 
 		//adds title image
@@ -139,7 +178,7 @@ MainMenu.prototype = {
 		game.physics.enable(startButton);
    		startButton.anchor.set(0.5);
 		startButton.inputEnabled = true;
-		startButton.events.onInputDown.add(startGame, this);
+		startButton.events.onInputDown.add(startCutscene, this);
 
 		//adds credits button
 		creditsButton = game.add.sprite(650, 500, 'credits');
@@ -153,10 +192,101 @@ MainMenu.prototype = {
 		//adds alpha inout on play button
 		game.input.addMoveCallback(p, this);
 
-		//function that enables start button
-		function startGame(){
-			game.state.start('GamePlay');
-		}
+		///functions that enables the beginning cutscene with the 
+		//use of timers and embeded functions
+		function startCutscene(){
+			if(!play){
+				checkScared = true;
+				blackScreen = game.add.sprite(0, 0, 'blackScreen');
+				scared = game.add.sprite(400, 300, 'scared');
+				scared.alpha = 0;
+				scared.anchor.setTo(0.5, 0.5);
+				//console.log("starting fadeIn Scared");
+				game.time.events.add(Phaser.Timer.SECOND * 3, fadeInScared, this);
+				checkCredits = false;
+				play = true;
+			}
+		}	function fadeInScared() {
+				//console.log("fadeInScared");
+				game.add.tween(scared).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+			    game.time.events.add(Phaser.Timer.SECOND * 3, fadeOutScared, this);
+			}
+				function fadeOutScared(){
+					checkScared = false;
+					game.add.tween(scared).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
+					pain = game.add.sprite(400, 300, 'pain');
+					pain.alpha = 0;
+					pain.anchor.setTo(0.5, 0.5);
+					game.time.events.add(Phaser.Timer.SECOND * 3, fadeInPain, this);
+				}
+					function fadeInPain(){
+						game.add.tween(pain).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+						game.time.events.add(Phaser.Timer.SECOND * 3, fadeOutPain, this);
+					}
+						function fadeOutPain(){
+							game.add.tween(pain).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
+							helpless = game.add.sprite(400, 300, 'helpless');
+							helpless.alpha = 0;
+							helpless.anchor.setTo(0.5, 0.5);
+							game.time.events.add(Phaser.Timer.SECOND * 3, fadeInHelpless, this);
+						}
+							function fadeInHelpless(){
+								game.add.tween(helpless).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+								game.time.events.add(Phaser.Timer.SECOND * 3, fadeOutHelpless, this);
+							}
+								function fadeOutHelpless(){
+									game.add.tween(helpless).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
+									today = game.add.sprite(400, 300, 'today');
+									today.alpha = 0;
+									today.anchor.setTo(0.5, 0.5);
+									game.time.events.add(Phaser.Timer.SECOND * 3, fadeInToday, this);
+								}
+									function fadeInToday(){
+										game.add.tween(today).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+										game.time.events.add(Phaser.Timer.SECOND * 3, fadeOutToday, this);
+									}
+										function fadeOutToday(){
+											game.add.tween(today).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
+											game.time.events.add(Phaser.Timer.SECOND * 3, yes,this);
+										}
+											function yes(){
+												yes = game.add.sprite(200, 300, 'yes');
+												yes.enableBody = true;
+												game.physics.enable(yes);
+   												yes.anchor.set(0.5);
+												yes.inputEnabled = true;
+												yes.events.onInputDown.add(pressYes, this);
+												no = game.add.sprite(600, 300, 'no');
+												no.enableBody = true;
+												game.physics.enable(no);
+   												no.anchor.set(0.5);
+												no.inputEnabled = true;
+												no.events.onInputDown.add(pressNo, this);
+											}
+												function pressYes(){
+													game.state.start("GamePlay");
+												}
+												
+
+												function pressNo(){
+													//eggroll.stop(false);
+													yes.destroy();
+													no.destroy();
+													point = game.add.sprite(400, 300, 'point');
+													point.alpha = 0;
+													point.anchor.setTo(0.5, 0.5);
+													game.time.events.add(Phaser.Timer.SECOND * 3, fadeInPoint, this);
+												}
+												
+													function fadeInPoint(){
+														game.add.tween(point).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+														game.time.events.add(Phaser.Timer.SECOND * 3, byebye,this);
+													}
+														function byebye(){
+															game.state.start("GameOver");
+														}
+														
+	
 
 		//function that modifies credits and its pop up.
 		function credits(){
@@ -172,6 +302,7 @@ MainMenu.prototype = {
 		function unpauseCredits(){		
 			game.paused = false;
 			creditScreen.destroy();
+			checkCredits = true;
 		}
 
 		//adds pointer
@@ -222,32 +353,36 @@ MainMenu.prototype = {
 		music3 = false;
 		music4 = false;
 		checkPaused = true;
-		checkCredits = true;
+		firstCountCheck = false;
+		secondCountCheck = false;
+		thirdCountCheck = false;
+		fourthCountCheck = false;
+		fifthCountCheck = false;
+		sixthCountCheck = false;
+		widowDead = false;
+		moving = true;
+		me = false;
+		godMode = false;
 
 		//if mouse hovers over start/credita button..change alpha.
 		if(startButton.input.pointerOver()){
         	startButton.alpha = 1;
-    	}
-    	else{
+    	}else{
         	startButton.alpha = 0.5;
     	}if(creditsButton.input.pointerOver()){
         	creditsButton.alpha = 1;
-    	}
-    	else{
+    	}else{
         	creditsButton.alpha = 0.5;
     	}
 	},
 
 	//debug info
 	render: function(){
-		//game.debug.body(startButton);
+		//game.debug.body(wand)
 	},
 }
 //Defines actual gameplay
 var GamePlay = function(game){};
-var pauseButton;
-var unpauseButton;
-var backButton;
 
 //loads gameplay assets
 GamePlay.prototype = {
@@ -262,6 +397,13 @@ GamePlay.prototype = {
         game.load.image('arm2', 'assets/img/arm2.png');
         game.load.image('helpText', 'assets/img/text1.png');
         game.load.image('wandText', 'assets/img/text2.png');
+        game.load.image('end', 'assets/img/end.png');
+        game.load.image('found', 'assets/img/found.png');
+        game.load.image('nouv', 'assets/img/nouv.png');
+        game.load.image('blackScreen', 'assets/img/blackScreen.png');
+        game.load.image('vine', 'assets/img/vine3.png');
+        game.load.image('vine2', 'assets/img/vine2.png');
+        game.load.atlas('cloud', 'assets/img/cloud.png', 'assets/img/cloud.json');
 		game.load.atlas('greenGhost', 'assets/img/greenGhost.png', 'assets/img/greenGhost.json');
 		game.load.atlas('player', 'assets/img/player.png', 'assets/img/player.json');
 		game.load.atlas('colorbar', 'assets/img/colorbar.png', 'assets/img/colorbar.json');
@@ -275,6 +417,8 @@ GamePlay.prototype = {
 		game.load.atlas('plantObstacles', 'assets/img/plantObstacles.png', 'assets/img/plantObstacles.json');
 		game.load.atlas('spikes', 'assets/img/spikes.png', 'assets/img/spikes.json');
 		game.load.atlas('pausemenubuttons', 'assets/img/pausemenubuttons.png', 'assets/img/pausemenubuttons.json');
+		game.load.atlas('stumps', 'assets/img/stumps.png', 'assets/img/stumps.json');
+		game.load.audio('explode', 'assets/audio/explode.mp3');
 		game.load.audio('ver1', 'assets/audio/Finding_Nouv_ver1.mp3');
 		game.load.audio('jump', 'assets/audio/jump4.mp3');
 		game.load.audio('ver2', 'assets/audio/Finding_Nouv_ver2.mp3');
@@ -326,6 +470,15 @@ GamePlay.prototype = {
    		 //adds obstacles to group
    		 obstacles = game.add.group();
 	 	 obstacles.enableBody = true;
+
+	 	 //adds cloud group
+	 	 //adds cloud obstacles
+	 	 clouds = game.add.group();
+	 	 clouds.enableBody = true;
+	 	
+	 	 //adds vine obstacles/group
+	 	 vines = game.add.group();
+	 	 vines.enableBody = false;
 
     	 //makes obstacles (Sorry this is nasty)
     	 var obstacle1 = obstacles.create(540, game.world.height - 200, 'obstacle5');
@@ -423,6 +576,8 @@ GamePlay.prototype = {
       
          var obstacle1 = obstacles.create(5800, game.world.height - 60, 'plantObstacles', 0);
          obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(5515, game.world.height - 60, 'plantObstacles', 11);
+         obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(5900, game.world.height - 90, 'plantObstacles', 1);
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(6000, game.world.height - 120, 'plantObstacles', 2);
@@ -508,16 +663,11 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(9100, game.world.height - 230, 'plantObstacles', 9);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(9360, game.world.height - 230, 'plantObstacles', 17);
-         obstacle1.body.immovable = true;
-
-         var obstacle1 = obstacles.create(9502, game.world.height - 200, 'plantObstacles', 17);
-         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(9420, game.world.height - 220, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;   
          var obstacle1 = obstacles.create(9580, game.world.height - 250, 'plantObstacles', 16);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(9672, game.world.height - 300, 'plantObstacles', 17);
-         obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(9780, game.world.height - 295, 'plantObstacles', 12);
+         var obstacle1 = obstacles.create(9750, game.world.height - 295, 'plantObstacles', 12);
          obstacle1.body.immovable = true; 
 
          var obstacle1 = obstacles.create(9860, game.world.height - 50, 'plantObstacles', 5);
@@ -551,15 +701,9 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(11750, game.world.height - 230, 'plantObstacles', 17);
          obstacle1.body.immovable = true;
-
-         var obstacle1 = obstacles.create(11800, game.world.height - 200, 'plantObstacles', 17);
-         obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(11850, game.world.height - 250, 'plantObstacles', 16);
-         obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(11900, game.world.height - 300, 'plantObstacles', 17);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(11980, game.world.height - 295, 'plantObstacles', 12);
-         obstacle1.body.immovable = true; 
+ 
 
          var obstacle1 = obstacles.create(12000, game.world.height - 50, 'plantObstacles', 5);
          obstacle1.body.immovable = true;
@@ -569,8 +713,6 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;  
          var obstacle1 = obstacles.create(12240, game.world.height - 80, 'plantObstacles', 9);
          obstacle1.body.immovable = true;  
-         var obstacle1 = obstacles.create(12290, game.world.height - 250, 'plantObstacles', 19);
-         obstacle1.body.immovable = true; 
          var obstacle1 = obstacles.create(12340, game.world.height - 100, 'plantObstacles', 14);
          obstacle1.body.immovable = true; 
          var obstacle1 = obstacles.create(12400, game.world.height - 200, 'plantObstacles', 3);
@@ -609,12 +751,7 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(13750, game.world.height - 160, 'plantObstacles', 21);
          obstacle1.body.immovable = true;
-
-         var obstacle1 = obstacles.create(13800, game.world.height - 200, 'plantObstacles', 21);
-         obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(13850, game.world.height - 250, 'plantObstacles', 16);
-         obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(13900, game.world.height - 300, 'plantObstacles', 17);
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(13980, game.world.height - 295, 'plantObstacles', 12);
          obstacle1.body.immovable = true; 
@@ -627,8 +764,6 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;  
          var obstacle1 = obstacles.create(14240, game.world.height - 80, 'plantObstacles', 2);
          obstacle1.body.immovable = true;  
-         var obstacle1 = obstacles.create(14290, game.world.height - 250, 'plantObstacles', 19);
-         obstacle1.body.immovable = true; 
          var obstacle1 = obstacles.create(14340, game.world.height - 100, 'plantObstacles', 14);
          obstacle1.body.immovable = true; 
          var obstacle1 = obstacles.create(14400, game.world.height - 200, 'plantObstacles', 3);
@@ -651,8 +786,7 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(15260, game.world.height - 50, 'plantObstacles', 4);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(15360, game.world.height - 250, 'plantObstacles', 16);
-         obstacle1.body.immovable = true;
+  
          var obstacle1 = obstacles.create(15400, game.world.height - 90, 'plantObstacles', 15);
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(15500, game.world.height - 130, 'plantObstacles', 7);
@@ -661,14 +795,7 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(15680, game.world.height - 200, 'plantObstacles', 9);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(15750, game.world.height - 230, 'plantObstacles', 21);
-         obstacle1.body.immovable = true;
-
-         var obstacle1 = obstacles.create(15800, game.world.height - 200, 'plantObstacles', 21);
-         obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(15850, game.world.height - 250, 'plantObstacles', 16);
-         obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(15900, game.world.height - 300, 'plantObstacles', 17);
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(15980, game.world.height - 295, 'plantObstacles', 12);
          obstacle1.body.immovable = true; 
@@ -681,8 +808,6 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;  
          var obstacle1 = obstacles.create(16240, game.world.height - 80, 'plantObstacles', 2);
          obstacle1.body.immovable = true;  
-         var obstacle1 = obstacles.create(16290, game.world.height - 250, 'plantObstacles', 16);
-         obstacle1.body.immovable = true; 
          var obstacle1 = obstacles.create(16340, game.world.height - 100, 'plantObstacles', 14);
          obstacle1.body.immovable = true; 
          var obstacle1 = obstacles.create(16400, game.world.height - 200, 'plantObstacles', 3);
@@ -735,6 +860,77 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;
          var obstacle1 = obstacles.create(17600, game.world.height - 100, 'plantObstacles', 16);
          obstacle1.body.immovable = true; 
+
+         //adds clouds
+         cloud = game.add.sprite(9900, game.world.height - 450, 'cloud',0); //cloud
+         obstacles.add(cloud);
+         cloud.animations.add('cloud',[0, 1, 2],3, true);
+         cloud.body.immovable = true;
+         cloud.body.setSize(100, 30, 60, 85);
+
+         cloud3 = game.add.sprite(12000, game.world.height - 450, 'cloud',0); 
+         obstacles.add(cloud3);
+         cloud3.animations.add('cloud',[0, 1, 2],3, true);
+         cloud3.body.immovable = true;
+         cloud3.body.setSize(100, 30, 60, 85);
+
+         cloud4 = game.add.sprite(14092, game.world.height - 450, 'cloud',0); 
+         obstacles.add(cloud4);
+         cloud4.animations.add('cloud',[0, 1, 2],3, true);
+         cloud4.body.immovable = true;
+         cloud4.body.setSize(100, 30, 60, 85);
+
+         cloud5 = game.add.sprite(10748, game.world.height - 350, 'cloud',0); 
+         obstacles.add(cloud5);
+         cloud5.animations.add('cloud',[0, 1, 2],3, true);
+         cloud5.body.immovable = true;
+         cloud5.body.setSize(100, 30, 60, 85);
+
+         cloud6 = game.add.sprite(15153, game.world.height - 450, 'cloud',0); 
+         obstacles.add(cloud6);
+         cloud6.animations.add('cloud',[0, 1, 2],3, true);
+         cloud6.body.immovable = true;
+         cloud6.body.setSize(100, 30, 60, 85);
+         cloud7 = game.add.sprite(16072, game.world.height - 450, 'cloud',0); 
+         obstacles.add(cloud7);
+         cloud7.animations.add('cloud',[0, 1, 2],3, true);
+         cloud7.body.immovable = true;
+         cloud7.body.setSize(100, 30, 60, 85);
+
+         cloud8 = game.add.sprite(17930, game.world.height - 400, 'cloud',0); 
+         obstacles.add(cloud8);
+         cloud8.animations.add('cloud',[0, 1, 2],3, true);
+         cloud8.body.immovable = true;
+         cloud8.body.setSize(120, 30, 50, 85);
+
+         //adds final boss obstacle
+         var vine1 = vines.create(18100, game.world.height - 720, 'vine');
+         var obstacle1 = obstacles.create(18300, game.world.height - 50, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(18270, game.world.height - 100, 'plantObstacles', 17);
+         obstacle1.scale.x = -1;
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(18285, game.world.height - 200, 'plantObstacles', 17);
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(18320, game.world.height - 360, 'plantObstacles', 17);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(18250, game.world.height - 250, 'plantObstacles', 17);
+         obstacle1.scale.x = -1;
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(18340, game.world.height - 100, 'plantObstacles', 10);
+         obstacle1.body.immovable = true; 
+
+         var vine2 = vines.create(17600, game.world.height - 720, 'vine');
+         var obstacle1 = obstacles.create(17770, game.world.height - 50, 'plantObstacles', 17);
+         obstacle1.scale.x = -1;
+         obstacle1.body.immovable = true;
+         var obstacle1 = obstacles.create(17785, game.world.height - 100, 'plantObstacles', 17);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(17785, game.world.height - 270, 'plantObstacles', 17);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(17750, game.world.height - 180, 'plantObstacles', 17);
+         obstacle1.scale.x = -1;
+         obstacle1.body.immovable = true;
 
    		 //helptext
    		 helpText = game.add.sprite(-30,0, 'helpText')
@@ -820,8 +1016,21 @@ GamePlay.prototype = {
 		}
 	},
 	update: function (){
+		//variables that are set to check 
+		//if player has pressed pause or credits repeatedly
 		checkPaused = true;
-	
+		checkCredits = true;
+		play = false;
+
+		//creates cloud animations
+		cloud.animations.play('cloud');
+		cloud3.animations.play('cloud');
+		cloud4.animations.play('cloud');
+		cloud5.animations.play('cloud');
+		cloud6.animations.play('cloud');
+		cloud7.animations.play('cloud');
+		cloud8.animations.play('cloud');	
+
 		//checks collision with platform for both enemy and player
 		hitPlatform = game.physics.arcade.collide(player, platforms);
 		hitPlatformEnemy = game.physics.arcade.collide(ghost, platforms);
@@ -831,23 +1040,22 @@ GamePlay.prototype = {
 		hitPlatformWidowEnemy = game.physics.arcade.collide(widowG, platforms);
 
 		//checks collision between Enemy and Player
-		/*
 	    attacked = game.physics.arcade.collide(ghost, player);
 	    attackedWrath = game.physics.arcade.collide(wrathG, player);
 	    attackedEnvy = game.physics.arcade.collide(envyG, player);
 	    attackedFear = game.physics.arcade.collide(fearG, player);
-	    attackedFlame = game.physics.arcade.collide(flames, player);
-	    attackedSpikes = game.physics.arcade.collide(spikesG, player);
+	    //attackedFlame = game.physics.arcade.collide(flames, player);
+	    //attackedSpikes = game.physics.arcade.collide(spikesG, player);
 	    attackedWidow = game.physics.arcade.collide(widowG, player);
-	    */
 
-	    //checks obstacle collision with enemy and obstacles
+	    //checks obstacle collision with enemies/wand and obstacles
+	    game.physics.arcade.collide(wand, obstacles);
 	    hitObstacleEnemy = game.physics.arcade.collide(ghost, obstacles);
 	    hitObstacleWrathEnemy = game.physics.arcade.collide(wrathG, obstacles);
 	    hitObstacleEnvyEnemy = game.physics.arcade.collide(envyG, obstacles);
 	    hitObstacleFearEnemy = game.physics.arcade.collide(fearG, obstacles);
 	    hitObstacleWidowEnemy = game.physics.arcade.collide(widowG, obstacles);
-
+	  
 	    //checks collision with ghost with each other
 	    ghostCollision = game.physics.arcade.collide(ghost, ghost);
 
@@ -855,6 +1063,7 @@ GamePlay.prototype = {
 	    hitObstaclePlayer = game.physics.arcade.collide(player, obstacles);
 
 	    //checks overlap with player and wand, and collects wand if player overlaps
+	    //checks overlap with hearts and spikes, which both dissapear if they overlap
 	    game.physics.arcade.overlap(player, wand, getWand, null, this);
 
 	    function getWand(player, wand){
@@ -867,7 +1076,7 @@ GamePlay.prototype = {
 	    dieWrath = game.physics.arcade.overlap(heart, wrathG, dieWrathGhost, null, this);
 	    dieEnvy = game.physics.arcade.overlap(heart, envyG, dieEnvyGhost, null, this);
 	    dieFear = game.physics.arcade.overlap(heart, fearG, dieFearGhost, null, this);
-	    dieWidow = game.physics.arcade.overlap(heart, widowG, dieWidow, null, this);
+	    dieWidow = game.physics.arcade.overlap(hearticles, widowG, dieWidow, null, this);
 
 		function dieWrathGhost(hearticles, wrathG){
 			wrathG.kill();
@@ -884,12 +1093,13 @@ GamePlay.prototype = {
 			hearticles.kill();
 			explode.play('', 0, 0.25, false);
 		}
-		function dieWidow(hearticles, widow){
+		function dieWidow(hearticles, widowG){
 			hearticles.kill();
 			widowDeathCounter++;
 			if(widowDeathCounter == 20){
 				widowG.kill();
 				explode.play('', 0, 0.25, false);
+				widowDead = true;
 			}
 		}
 	
@@ -995,6 +1205,10 @@ GamePlay.prototype = {
 			if(!widow){
 				this.spawnWidow();
 			}
+		}if(widowDead){
+			moving = false;
+			player.animations.play('newIdle');
+			this.spawnMe();
 		}
 	},
 
@@ -1002,10 +1216,10 @@ GamePlay.prototype = {
 	render: function(){
 		//game.debug.body(player);
 		//game.debug.body(obstacles);
-		widowG.forEach(game.debug.body,game.debug,"#dd00dd",false);
-		game.debug.spriteInfo(player, 32, 32);
+		//wand.forEach(game.debug.body,game.debug,"#dd00dd",false);
+		//game.debug.spriteInfo(player, 32, 32);
 	},
-
+	//Old Health system
 	//if player is attacked deplete health
 	//if counter reaches 7, restart game!
 	/*attackedCounter: function(){
@@ -1052,7 +1266,7 @@ GamePlay.prototype = {
         	wand.body.collideWorldBounds = true;
 			//gives the player animations
 			wand.animations.add('wand',[0, 1, 2],10, true);
-		
+			game.camera.follow(wand, null, 0.1, 0.1);
 		}
 		oneWand = true;
 	},
@@ -1081,7 +1295,7 @@ GamePlay.prototype = {
 	//spawns wrath enemy
 	spawnWrath: function(){
 		if(!firstWrath){
-	 		wrath = new Wrath(game,'wrath', '', 6000);
+	 		wrath = new Wrath(game,'wrath', '', 6300);
      		wrathG.add(wrath);
 	 		firstWrath = true;
 	 		ver1.stop();
@@ -1152,7 +1366,7 @@ GamePlay.prototype = {
      		envyG.add(envy);
 	 		seventhEnvy = true;
 		 }if(!eigthEnvy){
-	 		envy = new Envy(game,'envy', '', 15330, 200);
+	 		envy = new Envy(game,'envy', '', 15260, 0);
      		envyG.add(envy);
 	 		eigthEnvy = true;
 		 }if(!ninthEnvy){
@@ -1181,7 +1395,7 @@ GamePlay.prototype = {
      		fearG.add(fear);
 	 		thirdFear = true;
 		 }if(!fourthFear){
-	 		fear = new Fear(game,'fear', '', 13100);
+	 		fear = new Fear(game,'fear', '', 13300);
      		fearG.add(fear);
 	 		fourthFear = true;
 		 }if(!fifthFear){
@@ -1198,10 +1412,68 @@ GamePlay.prototype = {
 	//spawns widow enemy
 	spawnWidow: function(){
 		if(!widow){
-	 		widow = new Widow(game,'widow', '', 18000);
+	 		widow = new Widow(game,'widow', '', 18050);
      		widowG.add(widow);
 	 		widow = true;
 	 	}
+},
+
+//creates ending cutscene
+	 spawnMe: function(){
+	 	if(!me){
+	 		godMode = true;
+	 		me = game.add.sprite(player.x + 100, 530, 'nouv');
+			me.alpha = 0;
+			me.scale.x = -1;
+			me.anchor.setTo(0.5, 0.5);
+			game.time.events.add(Phaser.Timer.SECOND * 3, fadeInMe, this);
+			function fadeInMe(){
+				game.add.tween(me).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+				player.scale.x = 1
+				game.time.events.add(Phaser.Timer.SECOND * 3, addBlack, this);
+			}
+					function addBlack(){
+						endBlackScreen = game.add.sprite(0, 0, 'blackScreen')
+						blackScreen.height = game.height;
+    					blackScreen.width = game.width;
+						game.time.events.add(Phaser.Timer.SECOND * 3, resetBounds, this);
+					}
+						function resetBounds(){
+							game.world.setBounds(0,0,800,600);
+							game.time.events.add(Phaser.Timer.SECOND * 1, fadeIntoBlack, this);
+						}
+						function fadeIntoBlack(){
+							endBlackScreen = game.add.sprite(0, 0, 'blackScreen');
+							endBlackScreen.anchor.setTo(0.5, 0.5);
+							game.time.events.add(Phaser.Timer.SECOND * 3, finallyFound, this);
+						}
+							function finallyFound(){
+								found = game.add.sprite(0, 0, 'found');
+								game.time.events.add(Phaser.Timer.SECOND * 3, fadeOutFound, this);
+							}
+							function fadeOutFound(){
+								game.add.tween(found).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
+								game.time.events.add(Phaser.Timer.SECOND * 3, foundMyself, this);
+
+							}
+							function foundMyself(){
+								endScreen = game.add.sprite(0, 0, 'end');
+								game.time.events.add(Phaser.Timer.SECOND * 6, backToStart, this);
+							}
+							function backToStart(){
+								game.camera.fade(0x000000, 4000);
+								game.time.events.add(Phaser.Timer.SECOND * 3, backToMain, this);
+							}
+							function backToMain(){
+								game.state.start('MainMenu');
+								ver4.stop();
+								ver1.stop();
+								ver2.stop();
+								ver3.stop();
+								ver4.stop();
+								opening.stop();
+							}
+			}
 	},
 	//kills hearticles after a certain time.
 	//will comment out if unused
@@ -1212,8 +1484,6 @@ GamePlay.prototype = {
 
 //Defines gameover function
 var GameOver = function(game){};
-var endButton;
-var endButton2;
 
 GameOver.prototype = {
 	//preloads assets
@@ -1233,6 +1503,10 @@ GameOver.prototype = {
 		endingSong = game.add.audio('endingSong');
 
 		//stops all music and plays ending song
+		ver1 = game.add.audio('ver1');
+		ver2 = game.add.audio('ver2');
+		ver3 = game.add.audio('ver3');
+		ver4 = game.add.audio('ver4');
 		ver1.stop();
 		ver2.stop();
 		ver3.stop();
@@ -1321,6 +1595,17 @@ GameOver.prototype = {
 		music4 = false;
 		checkPaused = true;
 		checkCredits = true;
+		firstCountCheck = false;
+		secondCountCheck = false;
+		thirdCountCheck = false;
+		fourthCountCheck = false;
+		fifthCountCheck = false;
+		sixthCountCheck = false;
+		widowDead = false;
+		play = false;
+		moving = true;
+		me = false;
+		godMode = false;
 
 		//if mouse hovers over startover/mainmenu button..change alpha.
 		if(endButton.input.pointerOver()){

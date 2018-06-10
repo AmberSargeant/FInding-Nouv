@@ -18,7 +18,7 @@ function Wrath(game,key, frame, position){
     this.frame = this.animations.add('walk',[0, 1, 2 , 3 , 4],5, true);
     this.animations.add('walk',[0, 1, 2, 3, 4],4, true);
 	this.body.setSize(40, 120, 50, 20);
-	this.movingWrathRight  = true;
+	//this.movingWrathRight  = true;
 	this.flameLoop = game.time.events.loop(Phaser.Timer.SECOND*3, this.oneFlame, this);
 	this.moveLoop = game.time.events.loop(Phaser.Timer.SECOND*3, this.moveWrath, this);
 }
@@ -29,30 +29,27 @@ Wrath.prototype.constructor = Wrath;
 Wrath.prototype.update = function(){
 	if(this.x < this.minX){
 		this.body.velocity.x = 100;
-		this.movingWrathRight = true;
+		//this.movingWrathRight = true;
     	this.scale.x = 1;
 		this.play('walk');
 
 	}
 	if(this.x > this.maxX){
 		this.body.velocity.x = -100;
-		this.movingWrathRight = false;
+		//this.movingWrathRight = false;
     	this.scale.x = -1;
 		this.play('walk');
 	}
-
-	game.physics.arcade.overlap(this, player, attackWrath, null, this);
-	game.physics.arcade.overlap(flames, player, attackFlame, null, this);
-	
-	function attackWrath(wrath, player){
-		player.takeDamage();
-	
-	}
-	function attackFlame(player, flames){
+	//checks overlap between wrath/flame and player
+	attackedFlame = game.physics.arcade.overlap(flames, player, flameDamage, null, this);
+	//attackedWrath = game.physics.arcade.overlap(this, player, wrathDamage, null, this);
+	function flameDamage(player,flames){
 		player.takeDamage();
 		this.flame.kill();
 	}
-
+	/*function wrathDamage(wrathG, player){
+		player.takeDamage();
+	}*/
 }
 
 Wrath.prototype.oneFlame = function(){
@@ -64,11 +61,11 @@ Wrath.prototype.oneFlame = function(){
 Wrath.prototype.moveWrath = function(){
 	this.body.velocity.x = game.rnd.integerInRange(-100,100);
 	if(this.body.velocity.x < 0){
-			this.movingWrathRight = false;
+			//this.movingWrathRight = false;
     		this.scale.x = -1;
 			this.play('walk');
 	}else if (this.body.velocity.x > 0){
-			this.movingWrathRight = true;
+			//this.movingWrathRight = true;
     	    this.scale.x = 1;
 			this.play('walk');
 	}
@@ -81,6 +78,7 @@ Wrath.prototype.kill = function(){
 	Phaser.Sprite.prototype.kill.call(this);
 	
 }
+
 
 
 

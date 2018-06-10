@@ -19,7 +19,10 @@ Flame.prototype.update = function(){
 		this.kill();
 	}
 	this.animations.play('fireMove');
+
 	}
+
+	
 Flame.prototype.shootFlame = function(){
 	//if player is moving right, it goes right. Else
 	// the heart goes left.
@@ -29,9 +32,3 @@ Flame.prototype.shootFlame = function(){
 		this.body.velocity.x = 300;
 	}
 }
-
-
-
-
-
-
