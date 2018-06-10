@@ -16,7 +16,7 @@ function Widow(game,key, frame, position){
 	game.time.events.loop(Phaser.Timer.SECOND*3, this.moveWidow, this);
 	this.minX = position - 300;
 	this.maxX = position + 300 ;
-	this.spikeLoop = game.time.events.loop(Phaser.Timer.SECOND*3, this.oneSpike, this);
+	this.spikeLoop = game.time.events.loop(Phaser.Timer.SECOND*4, this.oneSpike, this);
 	this.moveLoop = game.time.events.loop(Phaser.Timer.SECOND*3, this.moveWidow, this);
 }
 

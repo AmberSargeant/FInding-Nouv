@@ -71,6 +71,8 @@ var seventhEnvy = false;
 var eigthEnvy = false;
 var ninthEnvy = false;
 var tenthEnvy = false;
+var eleventhEnvy = false;
+var twelthEnvy = false;
 var fear;
 var firstFear = false;
 var secondFear = false;
@@ -296,6 +298,7 @@ MainMenu.prototype = {
 			creditScreen.inputEnabled = true;
 			creditScreen.events.onInputDown.add(unpauseCredits, this);
 			checkCredits = false;
+			play = true;
 			}
 		}
 
@@ -303,6 +306,7 @@ MainMenu.prototype = {
 			game.paused = false;
 			creditScreen.destroy();
 			checkCredits = true;
+			play = false;
 		}
 
 		//adds pointer
@@ -342,6 +346,8 @@ MainMenu.prototype = {
 		eigthEnvy = false;
 		ninthEnvy = false;
 		tenthEnvy = false;
+		eleventhEnvy = false;
+		twelthEnvy = false;
 		firstFear = false;
 		secondFear = false;
 		thirdFear = false;
@@ -667,7 +673,7 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;   
          var obstacle1 = obstacles.create(9580, game.world.height - 250, 'plantObstacles', 16);
          obstacle1.body.immovable = true;
-         var obstacle1 = obstacles.create(9750, game.world.height - 295, 'plantObstacles', 12);
+         var obstacle1 = obstacles.create(9735, game.world.height - 295, 'plantObstacles', 12);
          obstacle1.body.immovable = true; 
 
          var obstacle1 = obstacles.create(9860, game.world.height - 50, 'plantObstacles', 5);
@@ -678,7 +684,9 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true;  
          var obstacle1 = obstacles.create(10057, game.world.height - 80, 'plantObstacles', 9);
          obstacle1.body.immovable = true;  
-         var obstacle1 = obstacles.create(10280, game.world.height - 250, 'plantObstacles', 19);
+         var obstacle1 = obstacles.create(10100, game.world.height - 250, 'plantObstacles', 19);
+         obstacle1.body.immovable = true; 
+         var obstacle1 = obstacles.create(10250, game.world.height - 230, 'plantObstacles', 19);
          obstacle1.body.immovable = true; 
          var obstacle1 = obstacles.create(10348, game.world.height - 300, 'plantObstacles', 14);
          obstacle1.body.immovable = true; 
@@ -862,7 +870,7 @@ GamePlay.prototype = {
          obstacle1.body.immovable = true; 
 
          //adds clouds
-         cloud = game.add.sprite(9900, game.world.height - 450, 'cloud',0); //cloud
+         cloud = game.add.sprite(9880, game.world.height - 450, 'cloud',0); //cloud
          obstacles.add(cloud);
          cloud.animations.add('cloud',[0, 1, 2],3, true);
          cloud.body.immovable = true;
@@ -1172,16 +1180,18 @@ GamePlay.prototype = {
 				this.spawnFear();
 			}
 		}if(player.x > 10000){
-			if(!music3 || !sixthWrath ||!sixthEnvy){
+			if(!music3 || !sixthWrath ||!sixthEnvy ||!eleventhEnvy){
 				ver2.stop();
 		    	ver3.play('', 0, 0.25, true);
 		    	music3 = true;
 		    	this.spawnWrath();
 		    	this.spawnEnvy();
+		    	this.spawnEnvy();
 			}
 		}if(player.x > 12000){
-			if(!fifthFear){
+			if(!fifthFear || !twelthEnvy){
 				this.spawnFear();
+				this.spawnEnvy();
 			}
 		}if(player.x > 14000){
 			if(!eigthWrath || !seventhEnvy){
@@ -1377,6 +1387,14 @@ GamePlay.prototype = {
 	 		envy = new Envy(game,'envy', '', 17300, 100);
      		envyG.add(envy);
 	 		tenthEnvy = true;
+		 }if(!eleventhEnvy){
+	 		envy = new Envy(game,'envy', '', 10860, 100);
+     		envyG.add(envy);
+	 		eleventhEnvy = true;
+		 }if(!twelthEnvy){
+	 		envy = new Envy(game,'envy', '', 12460, 100);
+     		envyG.add(envy);
+	 		twelthEnvy = true;
 		 }
 	},
 
@@ -1430,7 +1448,7 @@ GamePlay.prototype = {
 			function fadeInMe(){
 				game.add.tween(me).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
 				player.scale.x = 1
-				game.time.events.add(Phaser.Timer.SECOND * 3, addBlack, this);
+				game.time.events.add(Phaser.Timer.SECOND * 1, addBlack, this);
 			}
 					function addBlack(){
 						endBlackScreen = game.add.sprite(0, 0, 'blackScreen')
@@ -1440,7 +1458,7 @@ GamePlay.prototype = {
 					}
 						function resetBounds(){
 							game.world.setBounds(0,0,800,600);
-							game.time.events.add(Phaser.Timer.SECOND * 1, fadeIntoBlack, this);
+							game.time.events.add(Phaser.Timer.SECOND * 3, fadeIntoBlack, this);
 						}
 						function fadeIntoBlack(){
 							endBlackScreen = game.add.sprite(0, 0, 'blackScreen');
@@ -1583,6 +1601,8 @@ GameOver.prototype = {
 		eigthEnvy = false; 
 		ninthEnvy = false;
 		tenthEnvy = false;
+		eleventhEnvy = false;
+		twelthEnvy = false;
 		firstFear = false;
 		secondFear = false;
 		thirdFear = false;
